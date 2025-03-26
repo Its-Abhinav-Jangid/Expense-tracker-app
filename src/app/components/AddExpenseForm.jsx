@@ -1,21 +1,24 @@
 "use client";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
-import { useState, useTransition } from "react";
-
-export const AddExpenseForm = ({ onClose, onAdd }) => {
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+export const AddExpenseForm = ({ onClose }) => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     amount: 0,
     category: "Any",
   });
-
+  function onAdd() {
+    router.refresh();
+  }
   async function handleSubmit(e) {
     e.preventDefault();
 
     try {
       await axios.post("/api/expenses", formData);
-      onClose();
-      onAdd();
+      onClose(); // close the modal
+      onAdd(); // Display the updated data on page
     } catch (error) {
       console.error("Error adding expense:", error);
       alert("Failed to add expense. Please try again."); // Better UX

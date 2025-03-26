@@ -8,6 +8,15 @@ const prisma = new PrismaClient();
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
+  cookies: {
+    sessionToken: {
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+      },
+    },
+  },
   session: { strategy: "jwt" },
   callbacks: {
     async session({ session, token, user }) {
