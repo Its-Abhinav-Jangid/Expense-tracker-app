@@ -27,6 +27,17 @@ export async function GET(request) {
       gte: new Date(startDate),
       lte: new Date(endDate),
     };
+  } else if (startDate || endDate) {
+    if (startDate) {
+      query.created_at = {
+        gte: startDate,
+      };
+    }
+    if (endDate) {
+      query.created_at = {
+        lte: endDate,
+      };
+    }
   }
   if (minAmount && maxAmount) {
     query.amount = {
