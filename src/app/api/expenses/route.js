@@ -78,7 +78,7 @@ export async function GET(request) {
     }
     query.category = category;
   }
-  // console.log(query);
+
   try {
     const expenseData = await prisma.expenses.findMany({
       where: query,
@@ -86,7 +86,6 @@ export async function GET(request) {
         created_at: "desc",
       },
     });
-    // console.log(expenseData);
 
     return new Response(JSON.stringify(expenseData), {
       headers: {

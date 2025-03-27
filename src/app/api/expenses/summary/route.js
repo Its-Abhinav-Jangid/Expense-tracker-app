@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 export async function GET(request) {
   const session = await auth();
-  console.log(session);
+
   if (!session || !session.user || !session.user.id) {
     return new Response(
       JSON.stringify({ msg: "Unauthorized, please login and try again" }),
