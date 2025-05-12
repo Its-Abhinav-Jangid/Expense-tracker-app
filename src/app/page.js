@@ -28,6 +28,7 @@ async function fetchExpenseData() {
       },
     }
   );
+  prev30DaysExpensesSummary.dailyExpenseData.pop(); // remove the data for next day
 
   const { data: prev30DaysExpenses } = await axios.get(
     `${baseURL}/api/expenses?startDate=${prevMonth}&endDate=${tomorrow}`,
