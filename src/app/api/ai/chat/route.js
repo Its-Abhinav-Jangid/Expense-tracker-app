@@ -102,7 +102,7 @@ Always give helpful and personalized suggestions related to managing money. Keep
     return new Response(
       JSON.stringify({
         role: "error",
-        message: "Some internal error occured. Please try again later.",
+        content: "Some internal error occured. Please try again later.",
       }),
       {
         status: 500,
