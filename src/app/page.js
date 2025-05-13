@@ -7,6 +7,7 @@ import { AddExpenseButton } from "./components/AddExpenseButton";
 
 import axios from "axios";
 import { getCookie } from "./lib/getCookie";
+import { AiChatButton } from "./components/AiChatButton";
 
 async function fetchExpenseData() {
   const baseURL = process.env.API_BASE_URL;
@@ -83,6 +84,7 @@ export default async function Page() {
         </ExpenseSummary>
         {/* Add Expense Button */}
         <AddExpenseButton />
+        <AiChatButton />
       </div>
     </div>
   );
