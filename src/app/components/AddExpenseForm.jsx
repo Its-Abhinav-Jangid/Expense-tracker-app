@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 export const AddExpenseForm = ({ onClose }) => {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    amount: 0,
+    amount: "",
     category: "Any",
   });
   function onAdd() {
