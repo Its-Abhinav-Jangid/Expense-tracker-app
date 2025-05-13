@@ -58,6 +58,11 @@ export default {
           4: "hsl(var(--chart-4))",
           5: "hsl(var(--chart-5))",
         },
+        "dark-neutral": "#2d2a32",
+        "deep-rose": "#4e3646",
+        "dark-teal": "#1a3a3a",
+        "hover-gray": "#3a3540",
+        "active-lavender": "#4b3a4d",
       },
       borderRadius: {
         lg: "var(--radius)",
