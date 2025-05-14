@@ -3,8 +3,6 @@ import { auth } from "@/auth";
 import axios from "axios";
 const prisma = new PrismaClient();
 
-const AI_MODEL = "deepseek/deepseek-chat:free";
-
 export async function POST(request) {
   const session = await auth();
   if (!session || !session.user || !session.user.id) {
@@ -73,7 +71,7 @@ Always give helpful and personalized suggestions related to managing money. Keep
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-        model: AI_MODEL,
+        model: process.env.AI_MODEL,
         messages: chatHistory,
       },
       {
@@ -86,6 +84,7 @@ Always give helpful and personalized suggestions related to managing money. Keep
 
     const data = response.data;
     const reply = data.choices?.[0]?.message?.content;
+    console.log(data);
     if (!reply) {
       return new Response(
         JSON.stringify(
