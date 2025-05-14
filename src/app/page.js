@@ -12,7 +12,9 @@ import { AiChatButton } from "./components/AiChatButton";
 async function fetchExpenseData() {
   const baseURL = process.env.API_BASE_URL;
   const sessionCookie = await getCookie(process.env.AUTH_COOKIE_NAME); // required for api authentication
-
+  if (!sessionCookie) {
+    throw new Error("Authentication cookie not found");
+  }
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const prevMonth = new Date();
