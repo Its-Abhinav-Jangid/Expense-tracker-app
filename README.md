@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+© 2025 Abhinav Jangid. All rights reserved.
 
-## Getting Started
+🔒 This project is not open source. Usage, copying, or modification of any part of this project without permission is strictly prohibited.
 
-First, run the development server:
+# Expense Tracker App
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Track your expenses effortlessly and stay in control of your finances.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🌐 Live Demo
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+[Try the App on Vercel](https://expense-tracker-app-gamma-nine.vercel.app)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📸 Screenshots
 
-## Learn More
+![Dashboard Screenshot](./screenshots/Dashboard.png)
+![AI Chat Screenshot](./screenshots/AI.png)
+![Add Expense Screenshot](./screenshots/Add.png)
 
-To learn more about Next.js, take a look at the following resources:
+## ✅ Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Add and save expenses to the cloud
+- Last 30 days expense overview
+- GitHub OAuth login
+- Experimental AI assistant for insights
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🚧 Known Limitations
 
-## Deploy on Vercel
+- Only GitHub login (Google coming soon)
+- No full reports yet (monthly/yearly)
+- AI assistant may stop due to limited API credits
+- Only last 30 days of data shown
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔮 Coming Soon
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Google & other login options
+- Full expense reporting
+- Recurring expenses
+- AI upgrades (possibly premium)
+
+## 📜 License
+
+© 2025 Abhinav Jangid. All rights reserved.  
+This project is not open source. Usage, copying, or redistribution is strictly prohibited without permission.
+
+## ✅ Feedback Welcome!
+
+Any suggestions, issues, or feedback would be greatly appreciated. 🙌
+
+_Made with ❤️ by Abhinav Jangid_
