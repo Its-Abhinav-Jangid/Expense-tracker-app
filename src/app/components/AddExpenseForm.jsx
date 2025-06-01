@@ -30,7 +30,7 @@ export const AddExpenseForm = ({ onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div className="text-white fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="bg-gray-800 rounded-xl p-6 w-full max-w-md relative">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
@@ -79,6 +79,18 @@ export const AddExpenseForm = ({ onClose }) => {
               <option value="Transport">Transport</option>
               <option value="Bills">Bills</option>
               <option value="Entertainment">Entertainment</option>
+              <option value="Debt">Debt</option>
+              <option value="Health">Health</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Education">Education</option>
+              <option value="Groceries">Groceries</option>
+              <option value="Rent">Rent</option>
+              <option value="Insurance">Insurance</option>
+              <option value="PersonalCare">Personal Care</option>
+              <option value="Subscriptions">Subscriptions</option>
+              <option value="Gifts">Gifts</option>
+              <option value="Taxes">Taxes</option>
+              <option value="Miscellaneous">Miscellaneous</option>
             </select>
           </div>
 
