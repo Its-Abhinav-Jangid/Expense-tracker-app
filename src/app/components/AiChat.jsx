@@ -68,7 +68,10 @@ export function AiChat({ onClose }) {
     inputRef.current.focus();
   }
   return (
-    <div className="fixed inset-0 bg-slate-900/95 backdrop-blur-sm z-40">
+    <div
+      className="fixed inset-0 bg-slate-900/95 backdrop-blur-sm z-40"
+      style={{ margin: 0 }}
+    >
       <div className="flex flex-col h-full">
         {/* Header */}
         <div className="flex justify-between items-center p-4 border-b border-slate-700">
