@@ -41,6 +41,18 @@ export async function POST(request) {
     },
   });
 
+  const userIncome = await prisma.income.findMany({
+    select: {
+      amount: true,
+      category: true,
+      isRecurring: true,
+      date: true,
+    },
+    where: {
+      userId: session.user.id,
+    },
+  });
+
   const chatHistory = [];
   const systemPrompt = {
     role: "system",
@@ -51,15 +63,18 @@ export async function POST(request) {
 Here is a summary of their latest expenses:
 ${JSON.stringify(userExpenses)}
 
+Here is a summary of their income:
+${JSON.stringify(userIncome)}
+
 You should only answer questions related to personal finance, budgeting, savings, or expenses.
 If the user's query is irrelevant (e.g., not about finance), kindly remind them that you are a financial assistant and can only help with finance-related questions.
 Keep the responses shorter and concise.
 Always give helpful and personalized suggestions related to managing money. Keep your tone friendly, encouraging, and easy to understand.`,
   };
   chatHistory.push(systemPrompt);
-  if (payload.messages.length > 3) {
+  if (payload.messages.length > 4) {
     payload.messages = payload.messages.slice(
-      payload.messages.length - 1 - 3,
+      payload.messages.length - 1 - 4,
       payload.messages.length
     );
   }
