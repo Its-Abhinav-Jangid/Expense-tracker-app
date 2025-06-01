@@ -1,7 +1,12 @@
 export function formatAmount(amount) {
   amount = String(amount);
+  let prefix = "";
+  if (amount[0] === "-") {
+    prefix = "-";
+    amount = amount.substring(1, amount.length);
+  }
   if (amount.length < 4) {
-    return amount;
+    return prefix + amount;
   }
 
   let temp = amount.slice(amount.length - 3, amount.length);
@@ -20,5 +25,5 @@ export function formatAmount(amount) {
   if (amount[0] === ",") {
     amount = amount.substring(1, amount.length);
   }
-  return amount + "," + temp;
+  return prefix + amount + "," + temp;
 }
