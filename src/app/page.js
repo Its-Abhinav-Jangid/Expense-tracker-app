@@ -3,13 +3,14 @@ import { ExpensesList } from "./components/ExpensesList";
 import { ExpenseChart } from "./components/ExpenseChart";
 import { ExpenseSummary } from "./components/ExpenseSummary";
 import { days } from "./lib/days";
-import { AddExpenseButton } from "./components/AddExpenseButton";
-
 import axios from "axios";
 import { getCookie } from "./lib/getCookie";
 import { AiChatButton } from "./components/AiChatButton";
+import BalanceSheet from "./components/BalanceSheet";
+import filterIncomeForCurrentMonth from "./lib/filterIncomeForCurrentMonth";
+import filterExpenseForCurrentMonth from "./lib/filterExpenseForCurrentMonth";
 
-async function fetchExpenseData() {
+async function fetchData() {
   const baseURL = process.env.API_BASE_URL;
   const sessionCookie = await getCookie(process.env.AUTH_COOKIE_NAME); // required for api authentication
   if (!sessionCookie) {
@@ -41,13 +42,18 @@ async function fetchExpenseData() {
       },
     }
   );
+  const { data: incomeData } = await axios.get(`${baseURL}/api/income`, {
+    headers: {
+      Cookie: `${sessionCookie.name}=${sessionCookie.value}`,
+    },
+  });
 
-  return { prev30DaysExpenses, prev30DaysExpensesSummary };
+  return { prev30DaysExpenses, prev30DaysExpensesSummary, incomeData };
 }
 
 export default async function Page() {
-  const { prev30DaysExpenses, prev30DaysExpensesSummary } =
-    await fetchExpenseData();
+  const { prev30DaysExpenses, prev30DaysExpensesSummary, incomeData } =
+    await fetchData();
 
   const last7DaysData = prev30DaysExpensesSummary.dailyExpenseData.slice(
     prev30DaysExpensesSummary.dailyExpenseData.length - 7 > 0
@@ -80,12 +86,16 @@ export default async function Page() {
         <Header />
         {/* Bar Chart Section */}
         <ExpenseChart data={chartData} />
+        <BalanceSheet
+          income={filterIncomeForCurrentMonth(incomeData).total}
+          expense={filterExpenseForCurrentMonth(prev30DaysExpenses).total}
+          duration="This Month"
+        ></BalanceSheet>
+
         {/* Recent Expenses Summary */}
         <ExpenseSummary expenses={prev30DaysExpensesSummary}>
           <ExpensesList expenses={prev30DaysExpenses} />
         </ExpenseSummary>
-        {/* Add Expense Button */}
-        <AddExpenseButton />
         <AiChatButton />
       </div>
     </div>
