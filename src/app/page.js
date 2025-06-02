@@ -9,7 +9,7 @@ import { AiChatButton } from "./components/AiChatButton";
 import BalanceSheet from "./components/BalanceSheet";
 import filterIncomeForCurrentMonth from "./lib/filterIncomeForCurrentMonth";
 import filterExpenseForCurrentMonth from "./lib/filterExpenseForCurrentMonth";
-
+import "./globals.css";
 async function fetchData() {
   const baseURL = process.env.API_BASE_URL;
   const sessionCookie = await getCookie(process.env.AUTH_COOKIE_NAME); // required for api authentication

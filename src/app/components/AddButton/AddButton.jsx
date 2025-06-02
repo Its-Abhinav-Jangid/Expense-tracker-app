@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { FaPlus, FaArrowUp, FaArrowDown } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from "./AddButton.module.css";
-import { AddExpenseForm } from "../AddExpenseForm";
+import { ExpenseForm } from "../ExpenseForm";
 import { AddIncomeForm } from "../AddIncomeForm";
 export function AddButton() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -108,7 +108,9 @@ export function AddButton() {
           )}
         </AnimatePresence>
       </div>
-      {isExpenseFormOpen && <AddExpenseForm onClose={closeExpenseForm} />}
+      {isExpenseFormOpen && (
+        <ExpenseForm type="add" onClose={closeExpenseForm} />
+      )}
       {isIncomeFormOpen && <AddIncomeForm onClose={closeIncomeForm} />}
     </>
   );

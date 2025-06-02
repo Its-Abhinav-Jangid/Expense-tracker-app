@@ -3,25 +3,39 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-export const AddExpenseForm = ({ onClose }) => {
+export const ExpenseForm = ({
+  onClose,
+  type = "add",
+  amount = "",
+  category = "Any",
+  expenseId,
+}) => {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    amount: "",
-    category: "Any",
+    amount: amount,
+    category: category,
   });
-  function onAdd() {
-    router.refresh();
-  }
+
   async function handleSubmit(e) {
     e.preventDefault();
-
-    try {
-      await axios.post("/api/expenses", formData);
-      onClose(); // close the modal
-      onAdd(); // Display the updated data on page
-    } catch (error) {
-      console.error("Error adding expense:", error);
-      alert("Failed to add expense. Please try again."); // Better UX
+    if (type === "edit" && expenseId) {
+      try {
+        await axios.put(`/api/expenses/${expenseId}`, formData);
+        onClose(); // close the modal
+        router.refresh(); // Display the updated data on page
+      } catch (error) {
+        console.error("Error saving expense:", error);
+        alert("Failed to save expense. Please try again."); // Better UX
+      }
+    } else {
+      try {
+        await axios.post("/api/expenses", formData);
+        onClose(); // close the modal
+        router.refresh(); // Display the updated data on page
+      } catch (error) {
+        console.error("Error adding expense:", error);
+        alert("Failed to add expense. Please try again."); // Better UX
+      }
     }
   }
   function handleChange(e) {
@@ -30,11 +44,16 @@ export const AddExpenseForm = ({ onClose }) => {
   }
 
   return (
-    <div className="text-white fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div
+      style={{ margin: 0 }}
+      className="text-white fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+    >
       <div className="bg-gray-800 rounded-xl p-6 w-full max-w-md relative">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold">Add New Expense</h2>
+          <h2 className="text-xl font-bold">
+            {type === "edit" ? "Edit" : "Add New"} Expense
+          </h2>
           <button
             onClick={onClose}
             className="p-1 hover:bg-gray-700 rounded-lg transition-colors"
@@ -80,6 +99,8 @@ export const AddExpenseForm = ({ onClose }) => {
               <option value="Bills">Bills</option>
               <option value="Entertainment">Entertainment</option>
               <option value="Debt">Debt</option>
+              <option value="Investments">Investments</option>
+              <option value="EMI">EMI</option>
               <option value="Health">Health</option>
               <option value="Shopping">Shopping</option>
               <option value="Education">Education</option>
@@ -110,7 +131,7 @@ export const AddExpenseForm = ({ onClose }) => {
               type="submit"
               className="py-3 px-6 bg-emerald-600 hover:bg-emerald-500 rounded-lg transition-colors font-semibold text-gray-900"
             >
-              Add Expense
+              Submit
             </button>
           </div>
         </form>

@@ -8,6 +8,22 @@
   --background: #121212;
 }
 
+.animate-slideDown {
+  animation: slideDown .5s ease-out forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0 !important;
+  }
+
+  to {
+    opacity: 1;
+    max-height: 400px;
+  }
+}
+
 @layer base {
   :root {
 
