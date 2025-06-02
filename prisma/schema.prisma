@@ -40,6 +40,8 @@ enum categories {
   Transport
   Bills
   Entertainment
+  EMI
+  Investments
   Debt
   Health
   Shopping
