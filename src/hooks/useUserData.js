@@ -1,6 +1,6 @@
 "use client";
 import { useContext } from "react";
-import { UserDataContext } from "@/context/userData";
+import { UserDataContext } from "@/context/UserData";
 export default function useUserData() {
   const context = useContext(UserDataContext);
   if (context === undefined) {
