@@ -1,6 +1,6 @@
 import "./globals.css";
 import NavBar from "./components/NavBar/NavBar";
-import UserProvider from "@/context/userData";
+import UserProvider from "@/context/UserData";
 import fetchUserData from "./lib/fetchUserData";
 
 export const metadata = {
