@@ -1,9 +1,12 @@
 "use client";
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import { useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Leapfrog } from "ldrs/react";
+import "ldrs/react/Leapfrog.css";
+
 export function AiChat({ onClose }) {
   const [inputText, setInputText] = useState("");
   const inputRef = useRef(null);
@@ -14,18 +17,9 @@ export function AiChat({ onClose }) {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-  const disableInputs = useCallback(function () {
-    inputRef.current.disabled = true;
-    inputRef.current.classList.add("bg-slate-600");
-    submitButtonRef.current.disabled = true;
-    submitButtonRef.current.classList.add("bg-slate-600");
-  });
-  const enableInputs = useCallback(function () {
-    inputRef.current.disabled = false;
-    inputRef.current.classList.remove("bg-slate-600");
-    submitButtonRef.current.disabled = false;
-    submitButtonRef.current.classList.remove("bg-slate-600");
-  });
+
+  const [isPending, startTransition] = useTransition();
+
   const scrollToBottom = useCallback(function () {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTo({
@@ -48,22 +42,21 @@ export function AiChat({ onClose }) {
     setMessages(newMessages);
 
     setInputText("");
-    disableInputs();
 
-    try {
-      const response = await axios.post("/api/ai/chat", {
-        messages: newMessages,
-      });
-      setMessages((prev) => [...prev, response.data]);
-    } catch (error) {
-      const errorMessage = error?.response?.data || {
-        role: "error",
-        content: "Some error occured. Please try again later.",
-      };
-      setMessages((prev) => [...prev, errorMessage]);
-    }
-
-    enableInputs();
+    startTransition(async () => {
+      try {
+        const response = await axios.post("/api/ai/chat", {
+          messages: newMessages,
+        });
+        setMessages((prev) => [...prev, response.data]);
+      } catch (error) {
+        const errorMessage = error?.response?.data || {
+          role: "error",
+          content: "Some error occured. Please try again later.",
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+      }
+    });
 
     inputRef.current.focus();
   }
@@ -150,6 +143,20 @@ export function AiChat({ onClose }) {
               </div>
             );
           })}
+
+          {isPending && (
+            <div className={`flex justify-start`}>
+              <div
+                className={`max-w-[85%] rounded-lg p-3 bg-slate-800 text-slate-200`}
+              >
+                <div className="flex">
+                  <div className="mt-2">
+                    <Leapfrog size={24} color="white" speed={2.5} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Input Area */}
@@ -162,17 +169,23 @@ export function AiChat({ onClose }) {
             }}
           >
             <input
+              disabled={isPending}
               ref={inputRef}
               type="text"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               placeholder="Type your message..."
-              className="flex-1 bg-slate-800 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={`flex-1 ${
+                isPending ? "bg-slate-600" : "bg-slate-800"
+              } rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
             />
             <button
+              disabled={isPending}
               ref={submitButtonRef}
               type="submit"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-1"
+              className={`${
+                isPending ? "bg-slate-800" : "bg-blue-600"
+              } text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-1`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
