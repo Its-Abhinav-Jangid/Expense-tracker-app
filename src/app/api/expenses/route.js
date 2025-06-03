@@ -112,14 +112,21 @@ export async function POST(request) {
     );
   }
   const data = await request.json();
-  await prisma.expenses.create({
+  const newExpense = await prisma.expenses.create({
     data: {
       amount: parseFloat(data.amount),
       category: data?.category,
       user_id: session.user.id,
+      created_at: data?.created_at ? new Date(data?.created_at) : new Date(),
     },
   });
-  return new Response(JSON.stringify({ msg: "Expense Added Successfully" }), {
-    status: 201,
-  });
+  return new Response(
+    JSON.stringify({
+      msg: "Expense Added Successfully",
+      newExpense: newExpense,
+    }),
+    {
+      status: 201,
+    }
+  );
 }

@@ -3,6 +3,14 @@
 @tailwind utilities;
 
 
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+  /* Safari */
+  -ms-user-select: none;
+  /* IE10+/Edge */
+}
+
 .dark {
   --foreground: #ffffff;
   --background: #121212;

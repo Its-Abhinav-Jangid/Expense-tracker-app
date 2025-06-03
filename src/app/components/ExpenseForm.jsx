@@ -2,45 +2,69 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import useUserData from "@/hooks/useUserData";
 export const ExpenseForm = ({
   onClose,
   type = "add",
   amount = "",
   category = "Any",
+  created_at = new Date().toISOString(),
   expenseId,
+  user_id = "",
 }) => {
-  const router = useRouter();
+  const { userData, dispatch } = useUserData();
+
   const [formData, setFormData] = useState({
     amount: amount,
     category: category,
+    created_at: created_at,
+    user_id: user_id,
   });
 
   async function handleSubmit(e) {
     e.preventDefault();
+    let prevState = JSON.parse(JSON.stringify(userData));
     if (type === "edit" && expenseId) {
       try {
-        await axios.put(`/api/expenses/${expenseId}`, formData);
         onClose(); // close the modal
-        router.refresh(); // Display the updated data on page
+        dispatch({ type: "EDIT_EXPENSE", id: expenseId, ...formData });
+        await axios.put(`/api/expenses/${expenseId}`, formData);
       } catch (error) {
+        dispatch({ type: "ROLLBACK", prevState: prevState });
         console.error("Error saving expense:", error);
         alert("Failed to save expense. Please try again."); // Better UX
       }
     } else {
       try {
-        await axios.post("/api/expenses", formData);
+        const dummyId = new Date().toISOString();
         onClose(); // close the modal
-        router.refresh(); // Display the updated data on page
+        dispatch({
+          type: "ADD_EXPENSE",
+          ...formData,
+          dummyId: dummyId,
+          isOptimistic: true,
+        });
+
+        const newExpense = await axios.post("/api/expenses", formData);
+        dispatch({
+          type: "EDIT_EXPENSE",
+          ...newExpense.data.newExpense,
+          prevId: dummyId,
+        });
       } catch (error) {
+        dispatch({ type: "ROLLBACK", prevState: prevState });
         console.error("Error adding expense:", error);
+
         alert("Failed to add expense. Please try again."); // Better UX
       }
     }
   }
   function handleChange(e) {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "amount" ? parseInt(value) : value,
+    }));
   }
 
   return (
@@ -76,6 +100,7 @@ export const ExpenseForm = ({
               placeholder="Enter amount"
               min="1"
               step="1"
+              max="2147483647"
               name="amount"
               value={formData.amount}
               onChange={handleChange}

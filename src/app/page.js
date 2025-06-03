@@ -1,59 +1,21 @@
+"use client";
 import { Header } from "./components/Header";
 import { ExpensesList } from "./components/ExpensesList";
 import { ExpenseChart } from "./components/ExpenseChart";
 import { ExpenseSummary } from "./components/ExpenseSummary";
 import { days } from "./lib/days";
-import axios from "axios";
-import { getCookie } from "./lib/getCookie";
+
 import { AiChatButton } from "./components/AiChatButton";
 import BalanceSheet from "./components/BalanceSheet";
 import filterIncomeForCurrentMonth from "./lib/filterIncomeForCurrentMonth";
 import filterExpenseForCurrentMonth from "./lib/filterExpenseForCurrentMonth";
 import "./globals.css";
-async function fetchData() {
-  const baseURL = process.env.API_BASE_URL;
-  const sessionCookie = await getCookie(process.env.AUTH_COOKIE_NAME); // required for api authentication
-  if (!sessionCookie) {
-    throw new Error("Authentication cookie not found");
-  }
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const prevMonth = new Date();
+import useUserData from "@/hooks/useUserData";
 
-  prevMonth.setMonth(new Date().getMonth() - 1);
-
+export default function Page() {
   const {
-    data: [prev30DaysExpensesSummary],
-  } = await axios.get(
-    `${baseURL}/api/expenses/summary?startDate=${prevMonth}&endDate=${tomorrow}&includeDailyData=true`,
-    {
-      headers: {
-        Cookie: `${sessionCookie.name}=${sessionCookie.value}`, // Important for authentication
-      },
-    }
-  );
-  prev30DaysExpensesSummary.dailyExpenseData.pop(); // remove the data for next day
-
-  const { data: prev30DaysExpenses } = await axios.get(
-    `${baseURL}/api/expenses?startDate=${prevMonth}&endDate=${tomorrow}`,
-    {
-      headers: {
-        Cookie: `${sessionCookie.name}=${sessionCookie.value}`,
-      },
-    }
-  );
-  const { data: incomeData } = await axios.get(`${baseURL}/api/income`, {
-    headers: {
-      Cookie: `${sessionCookie.name}=${sessionCookie.value}`,
-    },
-  });
-
-  return { prev30DaysExpenses, prev30DaysExpensesSummary, incomeData };
-}
-
-export default async function Page() {
-  const { prev30DaysExpenses, prev30DaysExpensesSummary, incomeData } =
-    await fetchData();
+    userData: { prev30DaysExpenses, prev30DaysExpensesSummary, incomeData },
+  } = useUserData();
 
   const last7DaysData = prev30DaysExpensesSummary.dailyExpenseData.slice(
     prev30DaysExpensesSummary.dailyExpenseData.length - 7 > 0

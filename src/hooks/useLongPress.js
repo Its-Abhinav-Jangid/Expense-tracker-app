@@ -37,6 +37,7 @@ function useLongPress({ onClick, onLongPress, duration = 500 }) {
       onTouchStart: handleStart,
       onTouchEnd: handleEnd,
       onClick: handleClick,
+      onContextMenu: (e) => e.preventDefault(),
     },
     refs: {
       timeoutRef,
