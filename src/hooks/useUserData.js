@@ -7,5 +7,7 @@ export default function useUserData() {
     throw new Error("useUserData must be used within a UserProvider");
   }
 
+  console.log(context);
+
   return context;
 }

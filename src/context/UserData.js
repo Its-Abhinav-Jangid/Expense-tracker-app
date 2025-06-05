@@ -15,6 +15,7 @@ function userReducer(state, action) {
   const newAmount = parseInt(action?.amount);
   const nowISOString = new Date().toISOString();
   let updatedExpenses;
+  let updatedIncomeData;
   switch (action.type) {
     case "ADD_EXPENSE":
       return {
@@ -138,6 +139,62 @@ function userReducer(state, action) {
             }),
         },
         prev30DaysExpenses: updatedExpenses,
+      };
+
+    case "ADD_INCOME":
+      updatedIncomeData = [
+        {
+          id: action.id,
+          amount: newAmount,
+          category: action.category,
+          createdAt: action?.createdAt || nowISOString,
+          date: action.date,
+          isRecurring: action.isRecurring,
+          notes: action.notes,
+          isOptimistic: action?.isOptimistic || false,
+        },
+        ...state.incomeData,
+      ];
+      return {
+        ...state,
+        incomeData: updatedIncomeData,
+      };
+
+    case "EDIT_INCOME":
+      const found = state.incomeData.find(
+        (data) => data.id === action.id || data.id === action.prevId
+      );
+      if (!found) {
+        console.warn(
+          "Income not found for editing id: ",
+          action?.prevId || action?.id
+        );
+        return state;
+      }
+      updatedIncomeData = state.incomeData.map((data) => {
+        const isFound = data.id === action?.id || data.id === action.prevId;
+
+        if (isFound) {
+          return {
+            ...data,
+            id: action?.id || found.id,
+            amount: newAmount || found.amount,
+            category: action?.category || found.category,
+            createdAt: action?.createdAt || found.createdAt || nowISOString,
+            date: action?.date || found.date || nowISOString,
+            isRecurring: action?.isRecurring || found.isRecurring,
+            notes: action?.notes || found.notes,
+            updatedAt: action?.updatedAt || found.updatedAt || nowISOString,
+            userId: action.userId,
+            isOptimistic: action?.isOptimistic || false,
+          };
+        }
+
+        return data;
+      });
+      return {
+        ...state,
+        incomeData: updatedIncomeData,
       };
 
     case "ROLLBACK":

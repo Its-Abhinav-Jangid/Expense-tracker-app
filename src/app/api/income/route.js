@@ -111,7 +111,7 @@ export async function POST(request) {
     );
   }
   const data = await request.json();
-  await prisma.income.create({
+  const newIncome = await prisma.income.create({
     data: {
       amount: parseFloat(data.amount),
       isRecurring: Boolean(data?.isRecurring),
@@ -121,7 +121,10 @@ export async function POST(request) {
       userId: session.user.id,
     },
   });
-  return new Response(JSON.stringify({ msg: "Income Added Successfully" }), {
-    status: 201,
-  });
+  return new Response(
+    JSON.stringify({ msg: "Income Added Successfully", newIncome }),
+    {
+      status: 201,
+    }
+  );
 }

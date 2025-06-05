@@ -3,8 +3,10 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import useUserData from "@/hooks/useUserData";
 export const AddIncomeForm = ({ onClose }) => {
   const router = useRouter();
+  const { userData, dispatch } = useUserData();
   const [formData, setFormData] = useState({
     amount: "",
     category: "Salary",
@@ -12,16 +14,23 @@ export const AddIncomeForm = ({ onClose }) => {
     notes: "",
     date: new Date().toISOString().split("T")[0],
   });
-  function onAdd() {
-    router.refresh();
-  }
+
   async function handleSubmit(e) {
     e.preventDefault();
-
+    const dummyId = new Date().toISOString();
     try {
-      await axios.post("/api/income", formData);
       onClose(); // close the modal
-      onAdd(); // Display the updated data on page
+      dispatch({
+        type: "ADD_INCOME",
+        id: dummyId,
+        isOptimistic: true,
+        ...formData,
+      });
+      const {
+        data: { newIncome },
+      } = await axios.post("/api/income", formData);
+      console.log(newIncome);
+      dispatch({ type: "EDIT_INCOME", prevId: dummyId, ...newIncome });
     } catch (error) {
       console.error("Error adding income:", error);
       alert("Failed to add income. Please try again."); // Better UX
