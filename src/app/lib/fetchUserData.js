@@ -11,8 +11,8 @@ export default async function fetchUserData() {
 
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
-  const prevMonth = new Date();
-  prevMonth.setMonth(new Date().getMonth() - 1);
+  const prevYear = new Date();
+  prevYear.setFullYear(new Date().getFullYear() - 1);
 
   const headers = {
     headers: {
@@ -23,22 +23,22 @@ export default async function fetchUserData() {
   // Parallelize the requests
   const [summaryRes, expensesRes, incomeRes] = await Promise.all([
     axios.get(
-      `${baseURL}/api/expenses/summary?startDate=${prevMonth}&endDate=${tomorrow}&includeDailyData=true`,
+      `${baseURL}/api/expenses/summary?startDate=${prevYear}&endDate=${tomorrow}&includeDailyData=true`,
       headers
     ),
     axios.get(
-      `${baseURL}/api/expenses?startDate=${prevMonth}&endDate=${tomorrow}`,
+      `${baseURL}/api/expenses?startDate=${prevYear}&endDate=${tomorrow}`,
       headers
     ),
     axios.get(`${baseURL}/api/income`, headers),
   ]);
 
-  const [prev30DaysExpensesSummary] = summaryRes.data;
-  prev30DaysExpensesSummary.dailyExpenseData.pop(); // remove the data for next day
+  const [expensesSummary] = summaryRes.data;
+  expensesSummary.dailyExpenseData.pop(); // remove the data for next day
 
   return {
-    prev30DaysExpenses: expensesRes.data,
-    prev30DaysExpensesSummary,
-    incomeData: incomeRes.data,
+    expenses: expensesRes.data,
+    expensesSummary,
+    income: incomeRes.data,
   };
 }

@@ -4,24 +4,23 @@ import { ExpensesList } from "./components/ExpensesList";
 import { ExpenseChart } from "./components/ExpenseChart";
 import { ExpenseSummary } from "./components/ExpenseSummary";
 import { days } from "./lib/days";
-
 import { AiChatButton } from "./components/AiChatButton";
 import BalanceSheet from "./components/BalanceSheet";
 import filterIncomeForCurrentMonth from "./lib/filterIncomeForCurrentMonth";
 import filterExpenseForCurrentMonth from "./lib/filterExpenseForCurrentMonth";
 import "./globals.css";
-import useUserData from "@/hooks/useUserData";
+import { useUserDataStore } from "@/stores/useUserDataStore";
 
 export default function Page() {
-  const {
-    userData: { prev30DaysExpenses, prev30DaysExpensesSummary, incomeData },
-  } = useUserData();
+  const expenses = useUserDataStore((state) => state.expenses);
+  const expensesSummary = useUserDataStore((state) => state.expensesSummary);
+  const income = useUserDataStore((state) => state.income);
 
-  const last7DaysData = prev30DaysExpensesSummary.dailyExpenseData.slice(
-    prev30DaysExpensesSummary.dailyExpenseData.length - 7 > 0
-      ? prev30DaysExpensesSummary.dailyExpenseData.length - 7
+  const last7DaysData = expensesSummary.dailyExpenseData.slice(
+    expensesSummary.dailyExpenseData.length - 7 > 0
+      ? expensesSummary.dailyExpenseData.length - 7
       : 0, // its to prevent from indicies going -ve if data available is less than of 7 days
-    prev30DaysExpensesSummary.dailyExpenseData.length
+    expensesSummary.dailyExpenseData.length
   );
 
   const last7DaysName = last7DaysData.map(
@@ -49,14 +48,14 @@ export default function Page() {
         {/* Bar Chart Section */}
         <ExpenseChart data={chartData} />
         <BalanceSheet
-          income={filterIncomeForCurrentMonth(incomeData).total}
-          expense={filterExpenseForCurrentMonth(prev30DaysExpenses).total}
+          income={filterIncomeForCurrentMonth(income).total}
+          expense={filterExpenseForCurrentMonth(expenses).total}
           duration="This Month"
         ></BalanceSheet>
 
         {/* Recent Expenses Summary */}
-        <ExpenseSummary expenses={prev30DaysExpensesSummary}>
-          <ExpensesList expenses={prev30DaysExpenses} />
+        <ExpenseSummary expenses={expensesSummary}>
+          <ExpensesList expenses={expenses} />
         </ExpenseSummary>
         <AiChatButton />
       </div>

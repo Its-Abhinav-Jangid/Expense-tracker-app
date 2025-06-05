@@ -2,7 +2,7 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { useState } from "react";
-import useUserData from "@/hooks/useUserData";
+import { useUserDataStore } from "@/stores/useUserDataStore";
 export const ExpenseForm = ({
   onClose,
   type = "add",
@@ -12,7 +12,10 @@ export const ExpenseForm = ({
   expenseId,
   user_id = "",
 }) => {
-  const { userData, dispatch } = useUserData();
+  const snapshot = JSON.parse(JSON.stringify(useUserDataStore.getState()));
+  const rollback = useUserDataStore((state) => state.rollback);
+  const addExpense = useUserDataStore((state) => state.addExpense);
+  const editExpense = useUserDataStore((state) => state.editExpense);
 
   const [formData, setFormData] = useState({
     amount: amount,
@@ -23,14 +26,13 @@ export const ExpenseForm = ({
 
   async function handleSubmit(e) {
     e.preventDefault();
-    let prevState = JSON.parse(JSON.stringify(userData));
     if (type === "edit" && expenseId) {
       try {
         onClose(); // close the modal
-        dispatch({ type: "EDIT_EXPENSE", id: expenseId, ...formData });
+        editExpense({ id: expenseId, ...formData });
         await axios.put(`/api/expenses/${expenseId}`, formData);
       } catch (error) {
-        dispatch({ type: "ROLLBACK", prevState: prevState });
+        rollback(snapshot);
         console.error("Error saving expense:", error);
         alert("Failed to save expense. Please try again."); // Better UX
       }
@@ -38,21 +40,19 @@ export const ExpenseForm = ({
       try {
         const dummyId = new Date().toISOString();
         onClose(); // close the modal
-        dispatch({
-          type: "ADD_EXPENSE",
+        addExpense({
           ...formData,
           dummyId: dummyId,
           isOptimistic: true,
         });
 
         const newExpense = await axios.post("/api/expenses", formData);
-        dispatch({
-          type: "EDIT_EXPENSE",
+        editExpense({
           ...newExpense.data.newExpense,
           prevId: dummyId,
         });
       } catch (error) {
-        dispatch({ type: "ROLLBACK", prevState: prevState });
+        rollback(snapshot);
         console.error("Error adding expense:", error);
 
         alert("Failed to add expense. Please try again."); // Better UX

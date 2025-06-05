@@ -1,18 +1,20 @@
 "use client";
-import useUserData from "@/hooks/useUserData";
 import axios from "axios";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { useUserDataStore } from "@/stores/useUserDataStore";
 
 function DeleteExpenseForm({ expenseId, onClose }) {
-  const { userData, dispatch } = useUserData();
-  async function deleteExpense() {
-    let prevState = JSON.parse(JSON.stringify(userData));
+  const snapshot = JSON.parse(JSON.stringify(useUserDataStore.getState()));
+  const deleteExpense = useUserDataStore((state) => state.deleteExpense);
+  const rollback = useUserDataStore((state) => state.rollback);
+
+  async function onDelete() {
     try {
       onClose();
-      dispatch({ type: "DELETE_EXPENSE", id: expenseId });
+      deleteExpense(expenseId);
       await axios.delete(`/api/expenses/${expenseId}`);
     } catch (error) {
-      dispatch({ type: "ROLLBACK", prevState });
+      rollback(snapshot);
       console.error("Error delete expense:", error);
       alert("Failed to delete expense. Please try again."); // Better UX
     }
@@ -76,7 +78,7 @@ function DeleteExpenseForm({ expenseId, onClose }) {
             Cancel
           </button>
           <button
-            onClick={deleteExpense}
+            onClick={onDelete}
             className="px-5 py-2.5 rounded-lg bg-red-600 hover:bg-red-700 text-white transition-colors duration-200 flex items-center"
           >
             <span>Delete</span>

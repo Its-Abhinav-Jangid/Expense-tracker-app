@@ -2,11 +2,13 @@
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import useUserData from "@/hooks/useUserData";
+import { useUserDataStore } from "@/stores/useUserDataStore";
 export const AddIncomeForm = ({ onClose }) => {
-  const router = useRouter();
-  const { userData, dispatch } = useUserData();
+  const snapshot = JSON.parse(JSON.stringify(useUserDataStore.getState()));
+  const addIncome = useUserDataStore((state) => state.addIncome);
+  const editIncome = useUserDataStore((state) => state.editIncome);
+  const rollback = useUserDataStore((state) => state.rollback);
+
   const [formData, setFormData] = useState({
     amount: "",
     category: "Salary",
@@ -20,8 +22,7 @@ export const AddIncomeForm = ({ onClose }) => {
     const dummyId = new Date().toISOString();
     try {
       onClose(); // close the modal
-      dispatch({
-        type: "ADD_INCOME",
+      addIncome({
         id: dummyId,
         isOptimistic: true,
         ...formData,
@@ -29,9 +30,10 @@ export const AddIncomeForm = ({ onClose }) => {
       const {
         data: { newIncome },
       } = await axios.post("/api/income", formData);
-      console.log(newIncome);
-      dispatch({ type: "EDIT_INCOME", prevId: dummyId, ...newIncome });
+
+      editIncome({ prevId: dummyId, ...newIncome });
     } catch (error) {
+      rollback(snapshot);
       console.error("Error adding income:", error);
       alert("Failed to add income. Please try again."); // Better UX
     }

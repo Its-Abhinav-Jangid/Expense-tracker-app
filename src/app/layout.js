@@ -1,7 +1,7 @@
 import "./globals.css";
 import NavBar from "./components/NavBar/NavBar";
-import UserProvider from "@/context/UserData";
 import fetchUserData from "./lib/fetchUserData";
+import ClientWrapper from "./ClientWrapper";
 
 export const metadata = {
   title: "Expense Tracker App",
@@ -14,10 +14,8 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="min-h-screen text-white bg-gray-900 pb-[100px]">
-        <UserProvider initialData={initialData}>
-          {children}
-          <NavBar />
-        </UserProvider>
+        <ClientWrapper initialData={initialData}>{children}</ClientWrapper>
+        <NavBar />
       </body>
     </html>
   );
