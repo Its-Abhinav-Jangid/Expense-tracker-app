@@ -48,8 +48,8 @@ export default function Page() {
         {/* Bar Chart Section */}
         <ExpenseChart data={chartData} />
         <BalanceSheet
-          income={filterIncomeForCurrentMonth(income).total}
-          expense={filterExpenseForCurrentMonth(expenses).total}
+          incomeData={income}
+          expenseData={expenses}
           duration="This Month"
         ></BalanceSheet>
 
