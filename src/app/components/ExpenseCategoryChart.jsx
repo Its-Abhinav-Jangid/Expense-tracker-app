@@ -63,7 +63,7 @@ export default function ExpenseCategoryChart({ data }) {
   }
 
   return (
-    <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 shadow-md max-w-md w-full">
+    <div className="bg-gray-800 rounded-xl p-4 border border-gray-700 shadow-md max-w-100 w-full">
       <h2 className="text-white font-semibold text-lg mb-4">
         Spending by Category
       </h2>

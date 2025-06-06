@@ -14,7 +14,6 @@ const SmartAITip = ({ incomeData, expenseData }) => {
       incomeData: incomeData,
       startDate: new Date().setFullYear(new Date().getFullYear() - 1),
     });
-    console.log(incomeData, expenseData);
 
     const fetchAITip = async () => {
       setLoading(true);
@@ -25,7 +24,6 @@ const SmartAITip = ({ incomeData, expenseData }) => {
           expenseData,
           type: tipType,
         });
-        console.log(data);
 
         if (data.role === "assistant") {
           setAiTip({
@@ -48,7 +46,7 @@ const SmartAITip = ({ incomeData, expenseData }) => {
 
   if (loading) {
     return (
-      <div className="relative max-w-md">
+      <div className="relative max-w-100">
         <div className="bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 rounded-2xl p-0.5 shadow-lg transform transition-all duration-300 hover:scale-[1.015] hover:shadow-xl">
           <div className="bg-gray-900 rounded-2xl p-5 relative overflow-hidden">
             {/* Glows */}
@@ -107,7 +105,7 @@ const SmartAITip = ({ incomeData, expenseData }) => {
   if (!aiTip) return null;
 
   return (
-    <div className="relative max-w-md">
+    <div className="relative max-w-100">
       <div className="bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 rounded-2xl p-0.5 shadow-lg transform transition-all duration-300 hover:scale-[1.015] hover:shadow-xl">
         <div className="bg-gray-900 rounded-2xl p-5 relative overflow-hidden">
           {/* Glows */}
