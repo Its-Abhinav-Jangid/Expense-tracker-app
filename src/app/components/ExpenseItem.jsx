@@ -9,6 +9,8 @@ import { ExpenseForm } from "./ExpenseForm";
 import useIsMobile from "@/hooks/useIsMobile";
 import { useRouter } from "next/navigation";
 import DeleteExpenseForm from "./DeleteExpenseForm";
+import { categoryColors, categoryIcons } from "../lib/constants/categoryIcons";
+import { HiOutlineCalendar } from "react-icons/hi";
 
 export const ExpenseItem = ({ expenseData }) => {
   const isMobile = useIsMobile();
@@ -77,16 +79,31 @@ export const ExpenseItem = ({ expenseData }) => {
     <>
       <div
         {...longPressHandlers}
-        className="no-select flex justify-between items-center transition duration-500 bg-gray-800 hover:bg-gray-700 rounded-lg p-3"
+        className="hover:bg-gray-700 no-select bg-gray-800 rounded-xl p-4 hover:bg-gray-750 transition-colors"
       >
-        <div>
-          <h3 className="font-medium">
-            {expenseData.title || expenseData.category || "Expense"}
-          </h3>
-          <p className="text-xs text-gray-300">{expenseData.date || ""}</p>
-        </div>
-        <div className="text-red-300 font-bold">
-          - ₹{formatAmount(expenseData.amount)}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div
+              className={`p-3 rounded-xl  ${
+                categoryColors[expenseData.category] ||
+                categoryColors.Miscellaneous
+              } `}
+            >
+              {categoryIcons[expenseData.category] ||
+                categoryIcons.Miscellaneous}
+            </div>
+            <div>
+              <h3 className="font-medium">{expenseData.category}</h3>
+              <div className="flex items-center text-sm text-gray-400 mt-1">
+                <HiOutlineCalendar className="mr-1" />
+                <span>{expenseData.date}</span>
+              </div>
+            </div>
+          </div>
+
+          <span className="text-lg font-medium text-red-300">
+            - ₹{formatAmount(expenseData.amount)}
+          </span>
         </div>
         <div
           ref={menuRef}
