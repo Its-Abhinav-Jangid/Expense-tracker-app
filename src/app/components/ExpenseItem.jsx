@@ -7,12 +7,19 @@ import { useEffect, useRef, useState } from "react";
 import useLongPress from "@/hooks/useLongPress";
 import { ExpenseForm } from "./ExpenseForm";
 import useIsMobile from "@/hooks/useIsMobile";
-import { useRouter } from "next/navigation";
 import DeleteExpenseForm from "./DeleteExpenseForm";
 import { categoryColors, categoryIcons } from "../lib/constants/categoryIcons";
 import { HiOutlineCalendar } from "react-icons/hi";
 
-export const ExpenseItem = ({ expenseData }) => {
+export const ExpenseItem = ({
+  isOptimistic,
+  created_at,
+  date,
+  category,
+  amount,
+  id,
+  user_id,
+}) => {
   const isMobile = useIsMobile();
   const menuRef = useRef();
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
@@ -20,7 +27,7 @@ export const ExpenseItem = ({ expenseData }) => {
 
   const { handlers: longPressHandlers } = useLongPress({
     duration: isMobile ? 500 : 200,
-    onLongPress: !expenseData.isOptimistic ? enableOptionsMenu : "",
+    onLongPress: !isOptimistic ? enableOptionsMenu : "",
   });
 
   useEffect(() => {
@@ -70,9 +77,8 @@ export const ExpenseItem = ({ expenseData }) => {
     }
   }
 
-  if (expenseData.created_at) {
-    const date = new Date(expenseData.created_at);
-    expenseData.date = date.toLocaleDateString();
+  if (created_at && !date) {
+    date = new Date(created_at);
   }
 
   return (
@@ -85,24 +91,22 @@ export const ExpenseItem = ({ expenseData }) => {
           <div className="flex items-center space-x-3">
             <div
               className={`p-3 rounded-xl  ${
-                categoryColors[expenseData.category] ||
-                categoryColors.Miscellaneous
+                categoryColors[category] || categoryColors.Miscellaneous
               } `}
             >
-              {categoryIcons[expenseData.category] ||
-                categoryIcons.Miscellaneous}
+              {categoryIcons[category] || categoryIcons.Miscellaneous}
             </div>
             <div>
-              <h3 className="font-medium">{expenseData.category}</h3>
+              <h3 className="font-medium">{category}</h3>
               <div className="flex items-center text-sm text-gray-400 mt-1">
                 <HiOutlineCalendar className="mr-1" />
-                <span>{expenseData.date}</span>
+                <span>{new Date(date).toLocaleDateString()}</span>
               </div>
             </div>
           </div>
 
           <span className="text-lg font-medium text-red-300">
-            - ₹{formatAmount(expenseData.amount)}
+            - ₹{formatAmount(amount)}
           </span>
         </div>
         <div
@@ -136,18 +140,15 @@ export const ExpenseItem = ({ expenseData }) => {
         <ExpenseForm
           onClose={closeEditExpenseForm}
           type="edit"
-          expenseId={expenseData.id}
-          amount={expenseData.amount}
-          category={expenseData.category}
-          created_at={expenseData.created_at}
-          user_id={expenseData.user_id}
+          expenseId={id}
+          amount={amount}
+          category={category}
+          created_at={created_at}
+          user_id={user_id}
         />
       )}
       {showDeleteExpenseForm && (
-        <DeleteExpenseForm
-          expenseId={expenseData.id}
-          onClose={closeDeleteExpenseForm}
-        />
+        <DeleteExpenseForm expenseId={id} onClose={closeDeleteExpenseForm} />
       )}
     </>
   );

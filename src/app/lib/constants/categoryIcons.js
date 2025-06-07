@@ -18,6 +18,9 @@ import {
   HiOutlineGift,
   HiOutlineReceiptTax,
   HiOutlineDotsCircleHorizontal,
+  HiOutlineCurrencyDollar, // Salary
+  HiOutlineBriefcase, // Freelancing
+  HiOutlineArrowUp, // Interest
 } from "react-icons/hi";
 
 export const categoryIcons = {
@@ -40,6 +43,12 @@ export const categoryIcons = {
   Gifts: <HiOutlineGift className="text-red-400" />,
   Taxes: <HiOutlineReceiptTax className="text-amber-500" />,
   Miscellaneous: <HiOutlineDotsCircleHorizontal className="text-gray-500" />,
+  Salary: <HiOutlineCurrencyDollar className="text-emerald-400" />,
+  Freelancing: <HiOutlineBriefcase className="text-blue-400" />,
+  Investments: <HiOutlineChartBar className="text-purple-400" />,
+  Interest: <HiOutlineArrowUp className="text-amber-400" />,
+  Gift: <HiOutlineGift className="text-pink-400" />,
+  Others: <HiOutlineDotsCircleHorizontal className="text-gray-400" />,
 };
 export const categoryColors = {
   Food: "bg-amber-900/40 text-amber-400",
@@ -60,4 +69,10 @@ export const categoryColors = {
   Gifts: "bg-rose-900/40 text-rose-400",
   Taxes: "bg-amber-800/40 text-amber-300",
   Miscellaneous: "bg-gray-800/40 text-gray-400",
+  Salary: "bg-emerald-900/40 text-emerald-400",
+  Freelancing: "bg-blue-900/40 text-blue-400",
+  Investments: "bg-purple-900/40 text-purple-400",
+  Interest: "bg-amber-900/40 text-amber-400",
+  Gift: "bg-pink-900/40 text-pink-400",
+  Others: "bg-gray-800/40 text-gray-400",
 };

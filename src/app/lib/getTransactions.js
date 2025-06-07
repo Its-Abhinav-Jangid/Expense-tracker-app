@@ -1,0 +1,58 @@
+export default function getTransactions({ incomeData, expenses }) {
+  const transactions = [];
+  const now = new Date();
+
+  // Process expenses
+  for (let expense of expenses) {
+    transactions.push({
+      ...expense,
+      date: new Date(expense.created_at),
+      type: "expense",
+    });
+  }
+
+  // Process income
+  for (const income of incomeData) {
+    const createdDate = new Date(income.date);
+
+    if (income.isRecurring) {
+      // Handle recurring income
+      const startYear = createdDate.getFullYear();
+      const startMonth = createdDate.getMonth();
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+
+      const totalMonths =
+        (currentYear - startYear) * 12 + (currentMonth - startMonth);
+
+      for (let i = 0; i <= totalMonths; i++) {
+        const recurringDate = new Date(createdDate);
+        recurringDate.setMonth(startMonth + i);
+
+        // Skip future dates
+        if (recurringDate > now) continue;
+
+        transactions.push({
+          ...income,
+          date: recurringDate,
+          type: "income",
+          isRecurringInstance: i > 0, // Flag for generated instances
+          originalDate: i === 0 ? null : new Date(createdDate),
+        });
+      }
+    } else {
+      // Handle one-time income
+      transactions.push({
+        ...income,
+        date: createdDate,
+        type: "income",
+        isRecurringInstance: false,
+      });
+    }
+  }
+
+  // Sort transactions by date (newest first)
+  transactions.sort((a, b) => b.date - a.date);
+
+  return transactions;
+}
