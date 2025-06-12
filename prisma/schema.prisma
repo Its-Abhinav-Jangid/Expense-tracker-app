@@ -19,7 +19,7 @@ model expenses {
   amount     Int
   category   categories @default(Any)
   created_at DateTime   @default(now())
-  User       User?      @relation(fields: [user_id], references: [id])
+  User       User?      @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id    String?
 
   @@index([id, user_id])
