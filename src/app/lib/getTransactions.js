@@ -36,8 +36,8 @@ export default function getTransactions({ incomeData, expenses }) {
           ...income,
           date: recurringDate,
           type: "income",
-          isRecurring: i > 0, // Flag for generated instances
-          originalDate: i === 0 ? null : new Date(createdDate),
+          isRecurring: true,
+          originalDate: new Date(createdDate),
         });
       }
     } else {
