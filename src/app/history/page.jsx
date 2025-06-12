@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState, useEffect, useTransition } from "react";
+import { useState, useEffect, useTransition, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
   HiOutlineFilter,
@@ -19,10 +19,25 @@ export default function page() {
   const income = useUserDataStore((state) => state.income);
   const [filter, setFilter] = useState("all");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef();
   const [allExpenses, setAllExpenses] = useState(expenses);
   const [allIncome, setAllIncome] = useState(income);
   const [isPending, startTransition] = useTransition();
   const [allTransactionsLoaded, setAllTransactionsLoaded] = useState(false);
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
   useEffect(() => {
     setAllExpenses(expenses);
     setAllTransactionsLoaded(false);
@@ -82,7 +97,10 @@ export default function page() {
             </button>
 
             {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-40 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-20">
+              <div
+                ref={dropdownRef}
+                className="absolute right-0 mt-2 w-40 bg-gray-800 border border-gray-700 rounded-lg shadow-lg z-20"
+              >
                 <button
                   onClick={() => {
                     setFilter("all");
