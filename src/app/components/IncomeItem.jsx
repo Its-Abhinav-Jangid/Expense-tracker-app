@@ -1,5 +1,6 @@
 import { categoryColors, categoryIcons } from "../lib/constants/categoryIcons";
 import { HiOutlineCalendar } from "react-icons/hi";
+import { formatAmount } from "../lib/formatAmount";
 function IncomeItem({ id, category, date, amount }) {
   return (
     <div className="bg-gray-800 rounded-xl p-4 hover:bg-gray-750 transition-colors">
@@ -22,7 +23,7 @@ function IncomeItem({ id, category, date, amount }) {
         </div>
 
         <span className="text-lg font-medium text-emerald-400">
-          +₹{amount.toFixed(2)}
+          + ₹{formatAmount(amount)}
         </span>
       </div>
     </div>
