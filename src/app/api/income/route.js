@@ -18,7 +18,7 @@ export async function GET(request) {
   const minAmount = searchParams.get("minAmount");
   const maxAmount = searchParams.get("maxAmount");
   const category = searchParams.get("category");
-
+  const limit = Number(searchParams.get("limit")) || 500;
   const query = {
     userId: session.user.id,
   };
@@ -85,6 +85,7 @@ export async function GET(request) {
       orderBy: {
         date: "desc",
       },
+      take: limit,
     });
 
     return new Response(JSON.stringify(incomeData), {

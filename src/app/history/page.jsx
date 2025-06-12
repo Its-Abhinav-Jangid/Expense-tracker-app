@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useTransition } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
   HiOutlineFilter,
@@ -11,14 +11,50 @@ import getTransactions from "../lib/getTransactions";
 import { useUserDataStore } from "@/stores/useUserDataStore";
 import IncomeItem from "../components/IncomeItem";
 import { ExpenseItem } from "../components/ExpenseItem";
-
+import fetchData from "./fetchData";
+import { DotPulse } from "ldrs/react";
+import "ldrs/react/DotPulse.css";
 export default function page() {
-  const [filter, setFilter] = useState("all");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const expenses = useUserDataStore((state) => state.expenses);
   const income = useUserDataStore((state) => state.income);
-  console.log(income);
-  const transactions = getTransactions({ expenses, incomeData: income });
+  useEffect(() => {
+    setAllExpenses((prev) => {
+      const newOnes = expenses.filter((e) => !prev.some((p) => p.id === e.id));
+      return [...newOnes, ...prev];
+    });
+  }, [expenses]);
+
+  useEffect(() => {
+    setAllIncome((prev) => {
+      const newOnes = income.filter((i) => !prev.some((p) => p.id === i.id));
+      return [...newOnes, ...prev];
+    });
+  }, [income]);
+
+  const [filter, setFilter] = useState("all");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [allExpenses, setAllExpenses] = useState(expenses);
+  const [allIncome, setAllIncome] = useState(income);
+  const transactions = getTransactions({
+    expenses: allExpenses,
+    incomeData: allIncome,
+  });
+  console.log(transactions);
+
+  const [isPending, startTransition] = useTransition();
+  const [allTransactionsLoaded, setAllTransactionsLoaded] = useState(false);
+  async function loadMore() {
+    if (transactions.length === 0) return;
+    startTransition(async () => {
+      const startDate = transactions[0].date;
+      startDate.setMilliseconds(startDate.getMilliseconds() + 1); // Prevent duplicate
+
+      const data = await fetchData({ startDate });
+      setAllIncome((prev) => [...prev, ...data.incomeData]);
+      setAllExpenses((prev) => [...prev, ...data.expenseData]);
+      setAllTransactionsLoaded(data.hasAll);
+    });
+  }
 
   const filteredTransactions =
     filter === "all"
@@ -101,6 +137,22 @@ export default function page() {
         {filteredTransactions.length === 0 && (
           <div className="text-center py-12 text-gray-500">
             No transactions found
+          </div>
+        )}
+
+        {/* Load More Button */}
+        {filteredTransactions.length > 0 && !allTransactionsLoaded && (
+          <div className="mt-4 flex justify-center" onClick={loadMore}>
+            <button
+              disabled={isPending}
+              className="bg-gray-800 hover:bg-gray-700 px-4 py-2.5 rounded-lg text-sm transition-colors w-full max-w-xs"
+            >
+              {isPending ? (
+                <DotPulse size="43" speed="1.3" color="white" />
+              ) : (
+                "Load More"
+              )}
+            </button>
           </div>
         )}
       </main>

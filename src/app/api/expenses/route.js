@@ -18,7 +18,7 @@ export async function GET(request) {
   const minAmount = searchParams.get("minAmount");
   const maxAmount = searchParams.get("maxAmount");
   const category = searchParams.get("category");
-
+  const limit = Number(searchParams.get("limit")) || 500;
   const query = {
     user_id: session.user.id,
   };
@@ -85,6 +85,7 @@ export async function GET(request) {
       orderBy: {
         created_at: "desc",
       },
+      take: limit,
     });
 
     return new Response(JSON.stringify(expenseData), {
@@ -94,6 +95,8 @@ export async function GET(request) {
       status: 200,
     });
   } catch (error) {
+    console.error(error);
+
     return new Response(JSON.stringify({ msg: "Some server error occured" }), {
       headers: {
         "Content-Type": "application/json",
