@@ -35,16 +35,16 @@ export async function GET(request) {
         MAX(amount) AS highest,
         COUNT(*) AS count
       FROM expenses
-      WHERE created_at > ${start} AND created_at < ${end} AND "user_id" = ${userId}
+      WHERE date > ${start} AND date < ${end} AND "user_id" = ${userId}
 
     `;
     let dailyExpenses = [];
     if (Boolean(includeDailyData)) {
       const dailyData = await prisma.$queryRaw`
-      SELECT DATE(created_at) AS day, SUM(amount) AS total
+      SELECT DATE(date) AS day, SUM(amount) AS total
       FROM expenses
-      WHERE created_at >= ${start} AND created_at <= ${end} AND "user_id" = ${userId}
-      GROUP BY DATE(created_at)
+      WHERE date >= ${start} AND date <= ${end} AND "user_id" = ${userId}
+      GROUP BY DATE(date)
       ORDER BY day ASC;
     `;
       const formattedDailyData = dailyData.map((data) => {

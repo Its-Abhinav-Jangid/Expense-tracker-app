@@ -18,11 +18,13 @@ model expenses {
   id         Int        @id @default(autoincrement())
   amount     Int
   category   categories @default(Any)
+  date       DateTime   @default(now())
+  notes      String?
   created_at DateTime   @default(now())
   User       User?      @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id    String?
 
-  @@index([id, user_id])
+  @@index([id, user_id, date])
 }
 
 enum incomeCategories {

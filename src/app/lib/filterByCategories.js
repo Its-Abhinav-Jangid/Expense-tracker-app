@@ -8,8 +8,8 @@ export default function filterByCategories({
 
   const filteredData = data.filter(
     (d) =>
-      new Date(d.created_at.split("T")[0]) >= new Date(startDate) &&
-      new Date(d.created_at.split("T")[0]) <= new Date(endDate)
+      new Date(d.date.split("T")[0]) >= new Date(startDate) &&
+      new Date(d.date.split("T")[0]) <= new Date(endDate)
   );
   const result = {};
   filteredData.forEach((d) => {

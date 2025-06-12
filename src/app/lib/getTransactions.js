@@ -6,7 +6,7 @@ export default function getTransactions({ incomeData, expenses }) {
   for (let expense of expenses) {
     transactions.push({
       ...expense,
-      date: new Date(expense.created_at),
+      date: new Date(expense.date),
       type: "expense",
     });
   }

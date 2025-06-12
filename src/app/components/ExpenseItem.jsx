@@ -13,10 +13,10 @@ import { HiOutlineCalendar } from "react-icons/hi";
 
 export const ExpenseItem = ({
   isOptimistic,
-  created_at,
   date,
   category,
   amount,
+  notes,
   id,
   user_id,
 }) => {
@@ -75,10 +75,6 @@ export const ExpenseItem = ({
       setMenuPosition({ x: clientX, y: clientY });
       setShowOptionsMenu(true);
     }
-  }
-
-  if (created_at && !date) {
-    date = new Date(created_at);
   }
 
   return (
@@ -143,7 +139,8 @@ export const ExpenseItem = ({
           expenseId={id}
           amount={amount}
           category={category}
-          created_at={created_at}
+          date={date}
+          notes={notes}
           user_id={user_id}
         />
       )}

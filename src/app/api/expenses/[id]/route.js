@@ -31,7 +31,7 @@ export async function GET(_request, { params }) {
         headers: { "Content-Type": "application/json" },
       });
     }
-    if (expenseData.userId !== session.user.id) {
+    if (expenseData.user_id !== session.user.id) {
       return new Response(
         JSON.stringify({
           msg: "Sorry, you are unauthorized to view this resource",
@@ -127,6 +127,8 @@ export async function PUT(request, { params }) {
       data: {
         amount: parseFloat(data?.amount),
         category: data?.category,
+        notes: data?.notes,
+        date: data?.date ? new Date(data?.date) : new Date(),
       },
       where: {
         id: parseInt(id),

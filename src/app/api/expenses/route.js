@@ -23,18 +23,18 @@ export async function GET(request) {
     user_id: session.user.id,
   };
   if (startDate && endDate) {
-    query.created_at = {
+    query.date = {
       gte: new Date(startDate),
       lte: new Date(endDate),
     };
   } else if (startDate || endDate) {
     if (startDate) {
-      query.created_at = {
+      query.date = {
         gte: startDate,
       };
     }
     if (endDate) {
-      query.created_at = {
+      query.date = {
         lte: endDate,
       };
     }
@@ -83,7 +83,7 @@ export async function GET(request) {
     const expenseData = await prisma.expenses.findMany({
       where: query,
       orderBy: {
-        created_at: "desc",
+        date: "desc",
       },
       take: limit,
     });
@@ -120,7 +120,8 @@ export async function POST(request) {
       amount: parseFloat(data.amount),
       category: data?.category,
       user_id: session.user.id,
-      created_at: data?.created_at ? new Date(data?.created_at) : new Date(),
+      date: data?.date ? new Date(data?.date) : new Date(),
+      notes: data?.notes || "",
     },
   });
   return new Response(

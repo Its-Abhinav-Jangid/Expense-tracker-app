@@ -48,8 +48,8 @@ export default function groupByMonth({ incomeData, expenseData, months = 12 }) {
   });
 
   // ➤ Expenses
-  expenseData.forEach(({ amount, created_at }) => {
-    const d = new Date(created_at);
+  expenseData.forEach(({ amount, date }) => {
+    const d = new Date(date);
     if (d >= start && d <= now) {
       const label = d.toLocaleString("default", {
         month: "short",

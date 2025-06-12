@@ -8,9 +8,10 @@ export const ExpenseForm = ({
   type = "add",
   amount = "",
   category = "Any",
-  created_at = new Date().toISOString(),
   expenseId,
   user_id = "",
+  date = new Date(),
+  notes = "",
 }) => {
   const snapshot = JSON.parse(JSON.stringify(useUserDataStore.getState()));
   const rollback = useUserDataStore((state) => state.rollback);
@@ -20,7 +21,8 @@ export const ExpenseForm = ({
   const [formData, setFormData] = useState({
     amount: amount,
     category: category,
-    created_at: created_at,
+    date: new Date(date).toISOString().split("T")[0],
+    notes: notes || "",
     user_id: user_id,
   });
 
@@ -69,7 +71,7 @@ export const ExpenseForm = ({
 
   return (
     <div
-      style={{ margin: 0 }}
+      style={{ margin: 0, zIndex: 1000000 }}
       className="text-white fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
     >
       <div className="bg-gray-800 rounded-xl p-6 w-full max-w-md relative">
@@ -140,8 +142,33 @@ export const ExpenseForm = ({
             </select>
           </div>
 
-          {/* Hidden Date Input */}
-          <input type="hidden" value={new Date().toISOString()} />
+          <div>
+            <label className="block text-sm font-medium mb-2 text-gray-300">
+              Date
+            </label>
+            <input
+              type="date"
+              required
+              className="w-full px-4 py-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
+              placeholder="Enter date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 text-gray-300">
+              Notes
+            </label>
+            <textarea
+              type="text"
+              className="w-full px-4 py-3 bg-gray-700 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
+              placeholder="Any Notes...(Optional)"
+              name="notes"
+              value={formData.notes}
+              onChange={handleChange}
+            />
+          </div>
 
           {/* Form Actions */}
           <div className="grid grid-cols-2 gap-4 mt-8">

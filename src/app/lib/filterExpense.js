@@ -8,8 +8,8 @@ export default function filterExpense({
   let totalExpense = 0;
   const expenses = expenseData.filter(
     (expense) =>
-      new Date(expense.created_at.split("T")[0]) >= new Date(startDate) &&
-      new Date(expense.created_at.split("T")[0]) <= new Date(endDate)
+      new Date(expense.date.split("T")[0]) >= new Date(startDate) &&
+      new Date(expense.date.split("T")[0]) <= new Date(endDate)
   );
   expenses.forEach((expense) => (totalExpense += expense.amount));
 

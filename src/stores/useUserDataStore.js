@@ -32,7 +32,7 @@ export const useUserDataStore = create((set, get) => ({
     });
   },
 
-  addExpense: ({ dummyId, amount, category, created_at, isOptimistic }) => {
+  addExpense: ({ dummyId, amount, category, date, isOptimistic, notes }) => {
     const now = new Date().toISOString();
     const newAmount = parseInt(amount);
     const current = get();
@@ -41,7 +41,8 @@ export const useUserDataStore = create((set, get) => ({
       id: dummyId,
       amount: newAmount,
       category,
-      created_at: created_at || now,
+      notes,
+      date: date || now,
       isOptimistic: isOptimistic || false,
     };
 
@@ -52,7 +53,8 @@ export const useUserDataStore = create((set, get) => ({
       highest: Math.max(current.expensesSummary.highest, newAmount),
       total: current.expensesSummary.total + newAmount,
       dailyExpenseData: current.expensesSummary.dailyExpenseData.map((d) => {
-        const isToday = d.day.split("T")[0] === now.split("T")[0];
+        const isToday =
+          d.day.split("T")[0] === new Date(date).toISOString().split("T")[0];
         return isToday ? { ...d, total: d.total + newAmount } : d;
       }),
     };
@@ -61,6 +63,7 @@ export const useUserDataStore = create((set, get) => ({
       expenses: updatedExpenses,
       expensesSummary: updatedSummary,
     });
+    get().sortExpenses();
   },
 
   editExpense: ({
@@ -68,7 +71,8 @@ export const useUserDataStore = create((set, get) => ({
     prevId,
     amount,
     category,
-    created_at,
+    date,
+    notes,
     user_id,
     isOptimistic,
   }) => {
@@ -94,8 +98,9 @@ export const useUserDataStore = create((set, get) => ({
           ...data,
           id: id,
           amount: newAmount,
-          category: category,
-          created_at: created_at,
+          category,
+          date,
+          notes,
           user_id: user_id,
           isOptimistic: isOptimistic || false,
         };
@@ -112,8 +117,7 @@ export const useUserDataStore = create((set, get) => ({
       highest: newHighest,
       total: current.expensesSummary.total - prevAmount + newAmount,
       dailyExpenseData: current.expensesSummary.dailyExpenseData.map((d) => {
-        const isToday =
-          d.day.split("T")[0] === prevData.created_at.split("T")[0];
+        const isToday = d.day.split("T")[0] === prevData.date.split("T")[0];
         if (isToday) {
           return { ...d, total: d.total - prevAmount + newAmount };
         }
@@ -125,6 +129,7 @@ export const useUserDataStore = create((set, get) => ({
       expenses: updatedExpenses,
       expensesSummary: updatedSummary,
     });
+    get().sortExpenses();
   },
 
   deleteExpense: (id) => {
@@ -143,7 +148,7 @@ export const useUserDataStore = create((set, get) => ({
       highest: calculateHighest(updatedExpenses),
       dailyExpenseData: current.expensesSummary.dailyExpenseData.map((d) => {
         const isToday =
-          d.day.split("T")[0] === deletedExpense.created_at.split("T")[0];
+          d.day.split("T")[0] === deletedExpense.date.split("T")[0];
         if (isToday) {
           return { ...d, total: d.total - deletedExpense.amount };
         }
@@ -187,6 +192,7 @@ export const useUserDataStore = create((set, get) => ({
     const updatedIncome = [newIncome, ...current.income];
 
     set({ income: updatedIncome });
+    get().sortIncome();
   },
 
   editIncome: ({
@@ -235,6 +241,21 @@ export const useUserDataStore = create((set, get) => ({
     });
 
     set({ income: updatedIncome });
+    get().sortIncome();
+  },
+  sortExpenses() {
+    set((state) => ({
+      expenses: [...state.expenses].sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      ),
+    }));
+  },
+  sortIncome() {
+    set((state) => ({
+      income: [...state.income].sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      ),
+    }));
   },
 
   rollback: (prevState) => set(prevState),

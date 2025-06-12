@@ -30,11 +30,11 @@ export async function POST(request) {
     select: {
       amount: true,
       category: true,
-      created_at: true,
+      date: true,
     },
     where: {
       user_id: session.user.id,
-      created_at: {
+      date: {
         gte: prevMonth,
         lte: tomorrow,
       },
