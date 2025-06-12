@@ -17,32 +17,28 @@ import "ldrs/react/DotPulse.css";
 export default function page() {
   const expenses = useUserDataStore((state) => state.expenses);
   const income = useUserDataStore((state) => state.income);
-  useEffect(() => {
-    setAllExpenses((prev) => {
-      const newOnes = expenses.filter((e) => !prev.some((p) => p.id === e.id));
-      return [...newOnes, ...prev];
-    });
-  }, [expenses]);
-
-  useEffect(() => {
-    setAllIncome((prev) => {
-      const newOnes = income.filter((i) => !prev.some((p) => p.id === i.id));
-      return [...newOnes, ...prev];
-    });
-  }, [income]);
-
   const [filter, setFilter] = useState("all");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [allExpenses, setAllExpenses] = useState(expenses);
   const [allIncome, setAllIncome] = useState(income);
+  const [isPending, startTransition] = useTransition();
+  const [allTransactionsLoaded, setAllTransactionsLoaded] = useState(false);
+  useEffect(() => {
+    setAllExpenses(expenses);
+    setAllTransactionsLoaded(false);
+  }, [expenses]);
+
+  useEffect(() => {
+    setAllIncome(income);
+    setAllTransactionsLoaded(false);
+    [];
+  }, [income]);
+
   const transactions = getTransactions({
     expenses: allExpenses,
     incomeData: allIncome,
   });
-  console.log(transactions);
 
-  const [isPending, startTransition] = useTransition();
-  const [allTransactionsLoaded, setAllTransactionsLoaded] = useState(false);
   async function loadMore() {
     if (transactions.length === 0) return;
     startTransition(async () => {
