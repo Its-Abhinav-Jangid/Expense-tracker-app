@@ -37,13 +37,14 @@ const MoreTab = () => {
     <div className="min-h-screen bg-gray-900 text-gray-100 pb-20">
       {/* User Profile Section */}
       <div className="flex flex-col items-center pt-10 pb-8">
-        <div className="relative w-24 h-24 mb-4">
+        <div className="relative h-24 w-24 rounded-full border-4 border-indigo-500 overflow-hidden">
           <Image
-            src={session.user.image || "/images/user-avatar.png"} // Replace with your image path
+            src={session.user.image || "/images/user-avatar.png"}
             alt="User profile"
-            layout="fill"
-            objectFit="cover"
-            className="rounded-full border-4 border-indigo-500"
+            fill
+            sizes="(max-width: 768px) 200px, 250px"
+            className="object-cover"
+            priority={true}
           />
         </div>
         <h1 className="text-xl font-semibold">{session.user.name}</h1>
