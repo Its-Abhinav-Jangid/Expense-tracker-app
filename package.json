@@ -19,7 +19,7 @@
     "framer-motion": "^12.15.0",
     "ldrs": "^1.1.7",
     "lucide-react": "^0.475.0",
-    "next": "15.1.7",
+    "next": "^15.3.3",
     "next-auth": "^5.0.0-beta.25",
     "ngrok": "^5.0.0-beta.2",
     "nodemailer": "^6.10.1",
