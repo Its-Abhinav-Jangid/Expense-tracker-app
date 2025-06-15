@@ -3,10 +3,7 @@
 import axios from "axios";
 import { getCookie } from "../lib/getCookie";
 
-export default async function fetchData({
-  startDate = new Date(),
-  limit = 500,
-}) {
+export default async function fetchData({ endDate = new Date(), limit = 500 }) {
   const sessionCookie = await getCookie(process.env.AUTH_COOKIE_NAME);
   if (!sessionCookie) {
     throw new Error("Authentication cookie not found");
@@ -16,13 +13,13 @@ export default async function fetchData({
       Cookie: `${sessionCookie.name}=${sessionCookie.value}`,
     },
   };
-  startDate = new Date(startDate);
+  endDate = new Date(endDate);
   try {
     const { data: expenseData } = await axios.get(
       `${process.env.API_BASE_URL}/api/expenses`,
       {
         params: {
-          startDate: startDate,
+          endDate: endDate,
           limit: limit,
         },
         ...headers,
@@ -32,7 +29,7 @@ export default async function fetchData({
       `${process.env.API_BASE_URL}/api/income`,
       {
         params: {
-          startDate: startDate,
+          endDate: endDate,
           limit: limit,
         },
         ...headers,

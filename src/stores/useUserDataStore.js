@@ -226,12 +226,12 @@ export const useUserDataStore = create((set, get) => ({
         return {
           ...data,
           id: id || found.id,
-          amount: newAmount || found.amount,
+          amount: newAmount,
           category: category || found.category,
           createdAt: createdAt || found.createdAt || now,
           date: date || found.date || now,
-          isRecurring: isRecurring || found.isRecurring,
-          notes: notes || found.notes,
+          isRecurring: isRecurring,
+          notes: notes,
           updatedAt: updatedAt || found.updatedAt || now,
           userId: userId,
           isOptimistic: isOptimistic || false,
@@ -242,6 +242,20 @@ export const useUserDataStore = create((set, get) => ({
 
     set({ income: updatedIncome });
     get().sortIncome();
+  },
+  deleteIncome: (id) => {
+    const current = get();
+    const deletedIncome = current.income.find((data) => data.id === id);
+    if (!deletedIncome) {
+      console.warn("Income not found for deleting:", id);
+      return;
+    }
+
+    const updatedIncome = current.income.filter((data) => data.id !== id);
+
+    set({
+      income: updatedIncome,
+    });
   },
   sortExpenses() {
     set((state) => ({

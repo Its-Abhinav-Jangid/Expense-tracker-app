@@ -57,10 +57,10 @@ export default function page() {
   async function loadMore() {
     if (transactions.length === 0) return;
     startTransition(async () => {
-      const startDate = transactions[0].date;
-      startDate.setMilliseconds(startDate.getMilliseconds() + 1); // Prevent duplicate
+      const endDate = transactions[transactions.length - 1].date;
+      endDate.setMilliseconds(endDate.getMilliseconds() + 1); // Prevent duplicate
 
-      const data = await fetchData({ startDate });
+      const data = await fetchData({ endDate });
       setAllIncome((prev) => [...prev, ...data.incomeData]);
       setAllExpenses((prev) => [...prev, ...data.expenseData]);
       setAllTransactionsLoaded(data.hasAll);

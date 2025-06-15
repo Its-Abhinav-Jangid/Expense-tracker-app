@@ -3,39 +3,72 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { useState } from "react";
 import { useUserDataStore } from "@/stores/useUserDataStore";
-export const AddIncomeForm = ({ onClose }) => {
+export const IncomeForm = ({
+  onClose,
+  type,
+  id,
+  amount,
+  category = "Salary",
+  isRecurring = false,
+  notes,
+  date,
+}) => {
   const snapshot = JSON.parse(JSON.stringify(useUserDataStore.getState()));
   const addIncome = useUserDataStore((state) => state.addIncome);
   const editIncome = useUserDataStore((state) => state.editIncome);
   const rollback = useUserDataStore((state) => state.rollback);
 
   const [formData, setFormData] = useState({
-    amount: "",
-    category: "Salary",
-    isRecurring: false,
-    notes: "",
-    date: new Date().toISOString().split("T")[0],
+    amount: amount || "",
+    category: category || "Salary",
+    isRecurring: isRecurring || false,
+    notes: notes || "",
+    date: date
+      ? new Date(date).toISOString().split("T")[0]
+      : new Date().toISOString().split("T")[0],
   });
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const dummyId = new Date().toISOString();
-    try {
-      onClose(); // close the modal
-      addIncome({
-        id: dummyId,
-        isOptimistic: true,
-        ...formData,
-      });
-      const {
-        data: { newIncome },
-      } = await axios.post("/api/income", formData);
+    if (type === "edit") {
+      if (!id) {
+        console.error("Cannot edit data as id is not provided. id:", id);
+        alert("Failed to edit income. Please try again later.");
+        return;
+      }
+      try {
+        onClose(); // close the modal
+        editIncome({
+          id: id,
+          ...formData,
+        });
+        const {
+          data: { newIncome },
+        } = await axios.put(`/api/income/${id}`, formData);
+      } catch (error) {
+        rollback(snapshot);
+        console.error("Error editing income:", error);
+        alert("Failed to edit income. Please try again.");
+      }
+    } else {
+      const dummyId = new Date().toISOString();
+      try {
+        onClose(); // close the modal
+        addIncome({
+          id: dummyId,
+          isOptimistic: true,
+          ...formData,
+        });
+        const {
+          data: { newIncome },
+        } = await axios.post("/api/income", formData);
 
-      editIncome({ prevId: dummyId, ...newIncome });
-    } catch (error) {
-      rollback(snapshot);
-      console.error("Error adding income:", error);
-      alert("Failed to add income. Please try again."); // Better UX
+        editIncome({ prevId: dummyId, ...newIncome });
+      } catch (error) {
+        rollback(snapshot);
+        console.error("Error adding income:", error);
+        alert("Failed to add income. Please try again.");
+      }
     }
   }
   function handleChange(e) {
@@ -44,11 +77,16 @@ export const AddIncomeForm = ({ onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div
+      style={{ zIndex: 100000 }}
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+    >
       <div className="bg-gray-800 rounded-xl p-6 w-full max-w-md relative">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold">Add Income</h2>
+          <h2 className="text-xl font-bold">
+            {type === "edit" ? "Edit Income" : "Add Income"}
+          </h2>
           <button
             onClick={onClose}
             className="p-1 hover:bg-gray-700 rounded-lg transition-colors"
