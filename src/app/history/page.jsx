@@ -58,7 +58,7 @@ export default function page() {
     if (transactions.length === 0) return;
     startTransition(async () => {
       const endDate = transactions[transactions.length - 1].date;
-      endDate.setMilliseconds(endDate.getMilliseconds() + 1); // Prevent duplicate
+      endDate.setMilliseconds(endDate.getMilliseconds() - 5); // Prevent duplicate
 
       const data = await fetchData({ endDate });
       setAllIncome((prev) => [...prev, ...data.incomeData]);
