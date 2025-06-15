@@ -15,7 +15,14 @@ export default function ExpenseCategoryChart({ data }) {
     const amounts = Object.values(data);
 
     // Generate HSL colors spaced evenly
-    const colors = labels.map((_, i) => `hsl(${(i * 137.5) % 360}, 65%, 55%)`);
+    const colors = labels.map((_, i) => {
+      // Use golden angle (~137.508° for maximum differentiation)
+      const hue = (i * 137.508) % 360;
+      // Vary saturation and lightness slightly for extra distinction
+      const saturation = 65 + (i % 3) * 5; // 65%, 70%, or 75%
+      const lightness = 50 + (i % 2) * 5; // 50% or 55%
+      return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    });
 
     setChartData({
       labels,
