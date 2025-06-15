@@ -2,6 +2,7 @@ import "./globals.css";
 import NavBar from "./components/NavBar/NavBar";
 import fetchUserData from "./lib/fetchUserData";
 import ClientWrapper from "./ClientWrapper";
+import { SessionProvider } from "next-auth/react";
 
 export const metadata = {
   title: "Expense Tracker App",
@@ -14,7 +15,9 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="min-h-screen text-white bg-gray-900 pb-[100px]">
-        <ClientWrapper initialData={initialData}>{children}</ClientWrapper>
+        <ClientWrapper initialData={initialData}>
+          <SessionProvider>{children}</SessionProvider>
+        </ClientWrapper>
         <NavBar />
       </body>
     </html>
