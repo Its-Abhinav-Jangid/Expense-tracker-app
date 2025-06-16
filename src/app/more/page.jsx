@@ -1,16 +1,10 @@
 "use client";
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import {
-  FaUserCircle,
-  FaSignOutAlt,
-  FaBug,
-  FaInfoCircle,
-  FaComments,
-} from "react-icons/fa";
+import { FaSignOutAlt, FaBug, FaInfoCircle, FaComments } from "react-icons/fa";
 
 import dynamic from "next/dynamic";
-import { ExpensesList } from "../components/ExpensesList";
+
 const FeedbackModal = dynamic(() => import("@/app/components/FeedbackModal"), {
   ssr: false,
 });
@@ -18,9 +12,6 @@ const LogoutModal = dynamic(() => import("../components/LogoutModal"), {
   ssr: false,
 });
 import { useSession } from "next-auth/react";
-import { ExpenseSummary } from "../components/ExpenseSummary";
-import { ExpenseCategoryChartSkeleton } from "../components/ExpenseCategoryChartSkeleton";
-import { MonthlyTrendChartSkeleton } from "../components/MonthlyTrendChartSkeleton";
 
 const MoreTab = () => {
   const { data: session, status } = useSession();
@@ -67,7 +58,6 @@ const MoreTab = () => {
           )}
         </h1>
       </div>
-      <MonthlyTrendChartSkeleton />
       {/* Account Section */}
       <div className="bg-gray-800 mx-4 rounded-xl mb-6 overflow-hidden">
         <h2 className="text-lg font-medium px-6 py-4 border-b border-gray-700">
