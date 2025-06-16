@@ -14,7 +14,10 @@ import { ExpenseItem } from "../components/ExpenseItem";
 import fetchData from "./fetchData";
 import { DotPulse } from "ldrs/react";
 import "ldrs/react/DotPulse.css";
+import useLoadingStore from "@/stores/useIsLoadingStore";
+import TransactionsListSkeleton from "../components/TransactionsListSkeleton";
 export default function page() {
+  const isLoading = useLoadingStore((s) => s.isLoading);
   const expenses = useUserDataStore((state) => state.expenses);
   const income = useUserDataStore((state) => state.income);
   const [filter, setFilter] = useState("all");
@@ -139,16 +142,20 @@ export default function page() {
       {/* Transaction List */}
       <main className="px-4 py-2">
         <div className="grid grid-cols-1 gap-3">
-          {filteredTransactions.map((transaction) =>
-            transaction.type === "income" ? (
-              <IncomeItem key={uuidv4()} {...transaction} />
-            ) : (
-              <ExpenseItem key={uuidv4()} {...transaction} />
+          {isLoading ? (
+            <TransactionsListSkeleton />
+          ) : (
+            filteredTransactions.map((transaction) =>
+              transaction.type === "income" ? (
+                <IncomeItem key={uuidv4()} {...transaction} />
+              ) : (
+                <ExpenseItem key={uuidv4()} {...transaction} />
+              )
             )
           )}
         </div>
 
-        {filteredTransactions.length === 0 && (
+        {filteredTransactions.length === 0 && !isLoading && (
           <div className="text-center py-12 text-gray-500">
             No transactions found
           </div>

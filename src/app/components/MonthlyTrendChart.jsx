@@ -1,5 +1,3 @@
-// components/MonthlyTrendChart.jsx
-
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -11,6 +9,8 @@ import {
   Legend,
 } from "chart.js";
 import groupByMonth from "../lib/groupByMonth";
+import useLoadingStore from "@/stores/useIsLoadingStore";
+import { MonthlyTrendChartSkeleton } from "./MonthlyTrendChartSkeleton";
 
 ChartJS.register(
   LineElement,
@@ -22,6 +22,10 @@ ChartJS.register(
 );
 
 export default function MonthlyTrendChart({ incomeData, expenseData }) {
+  const isLoading = useLoadingStore((s) => s.isLoading);
+  if (isLoading) {
+    return <MonthlyTrendChartSkeleton />;
+  }
   const groupedData = groupByMonth({ incomeData, expenseData, months: 12 });
 
   const labels = Object.keys(groupedData); // e.g., ["Jul 2024", ..., "Jun 2025"]

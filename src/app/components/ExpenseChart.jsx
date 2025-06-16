@@ -10,6 +10,9 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
+import useLoadingStore from "@/stores/useIsLoadingStore";
+import { ExpenseChartSkeleton } from "./ExpenseChartSkeleton";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -21,6 +24,12 @@ ChartJS.register(
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 export const ExpenseChart = ({ data }) => {
+  const isLoading = useLoadingStore((state) => state.isLoading);
+
+  if (isLoading) {
+    return <ExpenseChartSkeleton />;
+  }
+
   const options = {
     plugins: {
       title: {

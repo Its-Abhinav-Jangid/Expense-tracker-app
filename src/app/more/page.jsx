@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import {
   FaUserCircle,
@@ -8,10 +8,19 @@ import {
   FaInfoCircle,
   FaComments,
 } from "react-icons/fa";
-import FeedbackModal from "@/app/components/FeedbackModal";
+
+import dynamic from "next/dynamic";
+import { ExpensesList } from "../components/ExpensesList";
+const FeedbackModal = dynamic(() => import("@/app/components/FeedbackModal"), {
+  ssr: false,
+});
+const LogoutModal = dynamic(() => import("../components/LogoutModal"), {
+  ssr: false,
+});
 import { useSession } from "next-auth/react";
-import Skeleton from "../loading";
-import LogoutModal from "../components/LogoutModal";
+import { ExpenseSummary } from "../components/ExpenseSummary";
+import { ExpenseCategoryChartSkeleton } from "../components/ExpenseCategoryChartSkeleton";
+import { MonthlyTrendChartSkeleton } from "../components/MonthlyTrendChartSkeleton";
 
 const MoreTab = () => {
   const { data: session, status } = useSession();
@@ -20,14 +29,10 @@ const MoreTab = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [modalType, setModalType] = useState("bug");
 
-  if (status === "loading") {
-    return <Skeleton />;
-  }
-
-  if (!session) {
-    return <p>You are not signed in.</p>;
-  }
-  const appVersion = process.env.NEXT_PUBLIC_APP_VERSION;
+  const appVersion = useMemo(
+    () => process.env.NEXT_PUBLIC_APP_VERSION || "N/A",
+    []
+  );
   const openFeedbackModal = (type) => {
     setModalType(type);
     setIsFeedbackModalOpen(true);
@@ -39,17 +44,30 @@ const MoreTab = () => {
       <div className="flex flex-col items-center pt-10 pb-8">
         <div className="relative h-24 w-24 rounded-full border-4 border-indigo-500 overflow-hidden">
           <Image
-            src={session.user.image || "/images/user-avatar.png"}
+            src={
+              status === "loading"
+                ? "/images/user-avatar.png"
+                : session.user.image || "/images/user-avatar.png"
+            }
             alt="User profile"
-            fill
-            sizes="(max-width: 768px) 200px, 250px"
+            height={96}
+            width={96}
+            sizes="96px"
             className="object-cover"
-            priority={true}
+            placeholder="blur"
+            blurDataURL="/images/user-avatar.png"
+            priority={false}
           />
         </div>
-        <h1 className="text-xl font-semibold">{session.user.name}</h1>
+        <h1 className="text-xl font-semibold">
+          {status == "loading" ? (
+            <div className="animate-pulse h-4 mt-2 bg-gray-700 rounded-full w-16" />
+          ) : (
+            session.user.name
+          )}
+        </h1>
       </div>
-
+      <MonthlyTrendChartSkeleton />
       {/* Account Section */}
       <div className="bg-gray-800 mx-4 rounded-xl mb-6 overflow-hidden">
         <h2 className="text-lg font-medium px-6 py-4 border-b border-gray-700">
@@ -58,7 +76,13 @@ const MoreTab = () => {
         <div className="p-6 space-y-4">
           <div className="flex justify-between items-center">
             <span className="text-gray-400">Logged in as:</span>
-            <span className="text-indigo-400">{session.user.email}</span>
+            <span className="text-indigo-400">
+              {status === "loading" ? (
+                <div className="h-4 bg-gray-700 rounded-full w-32" />
+              ) : (
+                session.user.email
+              )}
+            </span>
           </div>
           <button
             onClick={() => setIsLogoutModalOpen(true)}

@@ -1,23 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useUserDataStore } from "@/stores/useUserDataStore";
-import Skeleton from "./loading";
+import useLoadingStore from "@/stores/useIsLoadingStore";
 
 export default function ClientWrapper({ initialData, children }) {
   const setInitialData = useUserDataStore((state) => state.setInitialData);
-  const [isReady, setIsReady] = useState(false);
+  const setIsLoading = useLoadingStore((state) => state.setIsLoading);
 
   useEffect(() => {
     if (initialData) {
       setInitialData(initialData);
+      setIsLoading(false);
     }
-    setIsReady(true); // Tell the wrapper to render children after hydration
-  }, [initialData, setInitialData]);
-
-  if (!isReady) {
-    return <Skeleton />;
-  }
+  }, [initialData, setInitialData, setIsLoading]);
 
   return children;
 }

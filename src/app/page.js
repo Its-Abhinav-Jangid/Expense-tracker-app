@@ -6,12 +6,13 @@ import { ExpenseSummary } from "./components/ExpenseSummary";
 import { days } from "./lib/days";
 import { AiChatButton } from "./components/AiChatButton";
 import BalanceSheet from "./components/BalanceSheet";
-import filterIncomeForCurrentMonth from "./lib/filterIncomeForCurrentMonth";
-import filterExpenseForCurrentMonth from "./lib/filterExpenseForCurrentMonth";
 import "./globals.css";
 import { useUserDataStore } from "@/stores/useUserDataStore";
+import useLoadingStore from "@/stores/useIsLoadingStore";
 
 export default function Page() {
+  const isLoading = useLoadingStore((s) => s.isLoading);
+
   const expenses = useUserDataStore((state) => state.expenses);
   const expensesSummary = useUserDataStore((state) => state.expensesSummary);
   const income = useUserDataStore((state) => state.income);

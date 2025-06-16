@@ -2,10 +2,13 @@
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { useEffect, useState } from "react";
+import useLoadingStore from "@/stores/useIsLoadingStore";
+import { ExpenseCategoryChartSkeleton } from "./ExpenseCategoryChartSkeleton";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function ExpenseCategoryChart({ data }) {
+  const isLoading = useLoadingStore((s) => s.isLoading);
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
@@ -37,7 +40,9 @@ export default function ExpenseCategoryChart({ data }) {
       ],
     });
   }, [data]);
-
+  if (isLoading) {
+    return <ExpenseCategoryChartSkeleton />;
+  }
   const options = {
     responsive: true,
     maintainAspectRatio: false,
