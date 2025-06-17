@@ -4,16 +4,20 @@ import { useEffect } from "react";
 import { useUserDataStore } from "@/stores/useUserDataStore";
 import useLoadingStore from "@/stores/useIsLoadingStore";
 
-export default function ClientWrapper({ initialData, children }) {
+import fetchUserData from "./lib/fetchUserData";
+
+export default function ClientWrapper({ children }) {
   const setInitialData = useUserDataStore((state) => state.setInitialData);
   const setIsLoading = useLoadingStore((state) => state.setIsLoading);
 
   useEffect(() => {
-    if (initialData) {
+    async function fetchData() {
+      const initialData = await fetchUserData();
       setInitialData(initialData);
       setIsLoading(false);
     }
-  }, [initialData, setInitialData, setIsLoading]);
+    fetchData();
+  }, [setInitialData, setIsLoading]);
 
   return children;
 }
