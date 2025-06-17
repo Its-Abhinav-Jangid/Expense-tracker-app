@@ -21,11 +21,7 @@ export default async function fetchUserData() {
   };
 
   // Parallelize the requests
-  const [summaryRes, expensesRes, incomeRes] = await Promise.all([
-    axios.get(
-      `${baseURL}/api/expenses/summary?startDate=${prevYear}&endDate=${tomorrow}&includeDailyData=true`,
-      headers
-    ),
+  const [expensesRes, incomeRes] = await Promise.all([
     axios.get(
       `${baseURL}/api/expenses?startDate=${prevYear}&endDate=${tomorrow}`,
       headers
@@ -33,12 +29,8 @@ export default async function fetchUserData() {
     axios.get(`${baseURL}/api/income`, headers),
   ]);
 
-  const [expensesSummary] = summaryRes.data;
-  expensesSummary.dailyExpenseData.pop(); // remove the data for next day
-
   return {
     expenses: expensesRes.data,
-    expensesSummary,
     income: incomeRes.data,
   };
 }

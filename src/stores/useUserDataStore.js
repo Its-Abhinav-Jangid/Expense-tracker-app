@@ -8,6 +8,70 @@ function calculateHighest(expenses) {
     0
   );
 }
+function calculateExpensesSummary(expenses) {
+  // Get current date in UTC
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+
+  // Calculate start date (365 days ago in UTC)
+  const startDate = new Date(today);
+  startDate.setUTCDate(today.getUTCDate() - 365);
+
+  // Set end date to tomorrow (exclusive upper bound)
+  const endDate = new Date(today);
+  endDate.setUTCDate(today.getUTCDate() + 1);
+
+  // Filter expenses to the last 365 days (inclusive)
+  const filteredExpenses = expenses.filter((expense) => {
+    const expenseDate = new Date(expense.date);
+    return expenseDate >= startDate && expenseDate < endDate;
+  });
+
+  const summary = {
+    count: filteredExpenses.length,
+    highest: 0, // Will be updated below
+    total: 0,
+    dailyExpenseData: [],
+  };
+
+  const dailyTotalsMap = new Map();
+
+  // Track highest expense properly (handles negative values)
+  let highest = -Infinity;
+
+  // Process filtered expenses
+  for (const expense of filteredExpenses) {
+    const dateStr = expense.date.split("T")[0]; // Directly use UTC date string
+    summary.total += expense.amount;
+
+    // Update highest amount
+    if (expense.amount > highest) {
+      highest = expense.amount;
+    }
+
+    // Update daily totals
+    dailyTotalsMap.set(
+      dateStr,
+      (dailyTotalsMap.get(dateStr) || 0) + expense.amount
+    );
+  }
+
+  // Set highest (0 if no expenses)
+  summary.highest = highest === -Infinity ? 0 : highest;
+
+  // Generate daily data for 365 days
+  const currentDate = new Date(startDate);
+  while (currentDate < endDate) {
+    const dateStr = currentDate.toISOString().split("T")[0];
+    summary.dailyExpenseData.push({
+      day: dateStr,
+      total: dailyTotalsMap.get(dateStr) || 0,
+    });
+    currentDate.setUTCDate(currentDate.getUTCDate() + 1);
+  }
+
+  return summary;
+}
 
 export const useUserDataStore = create((set, get) => ({
   expenses: [],
@@ -15,21 +79,31 @@ export const useUserDataStore = create((set, get) => ({
     count: 0,
     highest: 0,
     total: 0,
-    dailyExpenseData: [], // Populate this array when setting initial data
+    dailyExpenseData: [],
   },
   income: [],
 
   setInitialData: (initialData) => {
+    const current = get();
+    const updatedExpenses = [...current.expenses, ...initialData.expenses];
+    const updatedIncome = [...current.income, ...initialData.income];
+    let newTotal = 0;
+    for (let expense of updatedExpenses) {
+      newTotal += expense.amount;
+    }
+
     set({
-      expenses: initialData.expenses || [],
-      expensesSummary: initialData.expensesSummary || {
+      expenses: updatedExpenses,
+      expensesSummary: calculateExpensesSummary(updatedExpenses) || {
         count: 0,
         highest: 0,
         total: 0,
         dailyExpenseData: [],
       },
-      income: initialData.income || [],
+      income: updatedIncome,
     });
+    get().sortExpenses();
+    get().sortIncome();
   },
 
   addExpense: ({ dummyId, amount, category, date, isOptimistic, notes }) => {

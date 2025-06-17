@@ -11,8 +11,6 @@ import { useUserDataStore } from "@/stores/useUserDataStore";
 import useLoadingStore from "@/stores/useIsLoadingStore";
 
 export default function Page() {
-  const isLoading = useLoadingStore((s) => s.isLoading);
-
   const expenses = useUserDataStore((state) => state.expenses);
   const expensesSummary = useUserDataStore((state) => state.expensesSummary);
   const income = useUserDataStore((state) => state.income);
