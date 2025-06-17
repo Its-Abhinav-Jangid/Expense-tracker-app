@@ -12,6 +12,8 @@ import {
 } from "chart.js";
 import useLoadingStore from "@/stores/useIsLoadingStore";
 import { ExpenseChartSkeleton } from "./ExpenseChartSkeleton";
+import { currencyMap } from "../lib/constants/currencies";
+import { useUserDataStore } from "@/stores/useUserDataStore";
 
 ChartJS.register(
   CategoryScale,
@@ -25,10 +27,11 @@ ChartJS.register(
 ChartJS.register(ArcElement, Tooltip, Legend);
 export const ExpenseChart = ({ data }) => {
   const isLoading = useLoadingStore((state) => state.isLoading);
-
+  const currencyCode = useUserDataStore((s) => s.user.currencyCode);
   if (isLoading) {
     return <ExpenseChartSkeleton />;
   }
+  const currencySymbol = currencyMap[currencyCode].symbol;
 
   const options = {
     plugins: {
@@ -45,7 +48,7 @@ export const ExpenseChart = ({ data }) => {
       y: {
         ticks: {
           color: "#e5e7eb",
-          callback: (value) => "₹" + value,
+          callback: (value) => currencySymbol + value,
         },
       },
     },

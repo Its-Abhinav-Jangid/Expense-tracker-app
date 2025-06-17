@@ -1,7 +1,11 @@
 import useLoadingStore from "@/stores/useIsLoadingStore";
 import { formatAmount } from "../lib/formatAmount";
+import { useUserDataStore } from "@/stores/useUserDataStore";
+import { currencyMap } from "../lib/constants/currencies";
 export const ExpenseSummary = (props) => {
   const isLoading = useLoadingStore((s) => s.isLoading);
+  const currencyCode = useUserDataStore((s) => s.user.currencyCode);
+  const currencySymbol = currencyMap[currencyCode]?.symbol;
   return (
     <div className="bg-gray-800 rounded-xl p-4 shadow-md overflow-y-auto">
       <h2 className="text-xl font-semibold mb-4">Recent Expenses</h2>
@@ -12,7 +16,7 @@ export const ExpenseSummary = (props) => {
             {isLoading ? (
               <div className="mt-2 animate-pulse h-6 bg-gray-700 rounded-full w-16" />
             ) : (
-              `₹${formatAmount(props.expenses.total)}`
+              `${currencySymbol + formatAmount(props.expenses.total)}`
             )}
           </div>
         </div>
@@ -22,7 +26,7 @@ export const ExpenseSummary = (props) => {
             {isLoading ? (
               <div className="mt-2 animate-pulse h-6 bg-gray-700 rounded-full w-16" />
             ) : (
-              `₹${formatAmount(props.expenses.highest)}`
+              `${currencySymbol + formatAmount(props.expenses.highest)}`
             )}
           </div>
         </div>

@@ -7,6 +7,8 @@ import useLongPress from "@/hooks/useLongPress";
 import { IncomeForm } from "./IncomeForm";
 import { MdEdit, MdDelete } from "react-icons/md";
 import DeleteIncomeForm from "./DeleteIncomeForm";
+import { useUserDataStore } from "@/stores/useUserDataStore";
+import { currencyMap } from "../lib/constants/currencies";
 function IncomeItem({
   id,
   category,
@@ -29,7 +31,8 @@ function IncomeItem({
 
   const [showEditIncomeForm, setShowEditIncomeForm] = useState(false);
   const [showDeleteIncomeForm, setShowDeleteIncomeForm] = useState(false);
-
+  const currencyCode = useUserDataStore((state) => state.user.currencyCode);
+  const currencySymbol = currencyMap[currencyCode]?.symbol;
   useEffect(() => {
     function handleClickOutside(event) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -95,7 +98,7 @@ function IncomeItem({
           </div>
 
           <span className="text-lg font-medium text-emerald-400">
-            + ₹{formatAmount(amount)}
+            + {currencySymbol + formatAmount(amount)}
           </span>
         </div>
         <div

@@ -9,6 +9,7 @@ import BalanceSheet from "./components/BalanceSheet";
 import "./globals.css";
 import { useUserDataStore } from "@/stores/useUserDataStore";
 import useLoadingStore from "@/stores/useIsLoadingStore";
+import CurrencyForm from "./components/CurrencyModal";
 
 export default function Page() {
   const expenses = useUserDataStore((state) => state.expenses);

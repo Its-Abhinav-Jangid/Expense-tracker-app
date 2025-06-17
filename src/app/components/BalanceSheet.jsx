@@ -9,6 +9,9 @@ import {
 import filterExpense from "../lib/filterExpense";
 import filterIncome from "../lib/filterIncome";
 import useLoadingStore from "@/stores/useIsLoadingStore";
+import { useUserDataStore } from "@/stores/useUserDataStore";
+import { currencyMap } from "../lib/constants/currencies";
+import BalanceSheetSkeleton from "./BalanceSheetSkeleton";
 
 export default function BalanceSheet({
   incomeData,
@@ -16,6 +19,8 @@ export default function BalanceSheet({
   duration: initialDuration,
 }) {
   const isLoading = useLoadingStore((s) => s.isLoading);
+  const currencyCode = useUserDataStore((s) => s.user.currencyCode);
+
   const [showDropdown, setShowDropdown] = useState(false);
   const [income, setIncome] = useState(0);
   const [expense, setExpense] = useState(0);
@@ -98,6 +103,10 @@ export default function BalanceSheet({
 
   const durationOptions = ["This Month", "Last 6 Months", "Last 1 Year"];
 
+  if (isLoading) {
+    return <BalanceSheetSkeleton />;
+  }
+  const currencySymbol = currencyMap[currencyCode].symbol;
   return (
     <div className="bg-gray-800 rounded-xl p-4 shadow-md border border-gray-700">
       <div className="flex justify-between items-center mb-4">
@@ -151,7 +160,7 @@ export default function BalanceSheet({
               {isLoading ? (
                 <div className="mt-2 h-4 bg-gray-700 animate-pulse rounded-full w-16" />
               ) : (
-                `₹${formatAmount(income)}`
+                `${currencySymbol + formatAmount(income)}`
               )}
             </div>
           </div>
@@ -170,7 +179,7 @@ export default function BalanceSheet({
               {isLoading ? (
                 <div className="mt-2 h-4 bg-gray-700 animate-pulse rounded-full w-16" />
               ) : (
-                `₹${formatAmount(expense)}`
+                `${currencySymbol + formatAmount(expense)}`
               )}
             </div>
           </div>
@@ -222,7 +231,7 @@ export default function BalanceSheet({
               {isLoading ? (
                 <div className="mt-2 h-4 bg-gray-700 animate-pulse rounded-full w-16" />
               ) : (
-                `₹${formatAmount(income - expense)}`
+                `${currencySymbol + formatAmount(income - expense)}`
               )}
             </div>
           </div>

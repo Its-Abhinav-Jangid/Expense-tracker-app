@@ -11,6 +11,8 @@ import {
 import groupByMonth from "../lib/groupByMonth";
 import useLoadingStore from "@/stores/useIsLoadingStore";
 import { MonthlyTrendChartSkeleton } from "./MonthlyTrendChartSkeleton";
+import { currencyMap } from "../lib/constants/currencies";
+import { useUserDataStore } from "@/stores/useUserDataStore";
 
 ChartJS.register(
   LineElement,
@@ -23,10 +25,13 @@ ChartJS.register(
 
 export default function MonthlyTrendChart({ incomeData, expenseData }) {
   const isLoading = useLoadingStore((s) => s.isLoading);
+  const currencyCode = useUserDataStore((state) => state.user.currencyCode);
+
   if (isLoading) {
     return <MonthlyTrendChartSkeleton />;
   }
   const groupedData = groupByMonth({ incomeData, expenseData, months: 12 });
+  const currencySymbol = currencyMap[currencyCode]?.symbol;
 
   const labels = Object.keys(groupedData); // e.g., ["Jul 2024", ..., "Jun 2025"]
   const incomeSeries = labels.map((label) => groupedData[label].income);
@@ -62,7 +67,7 @@ export default function MonthlyTrendChart({ incomeData, expenseData }) {
       y: {
         ticks: {
           color: "#d1d5db", // text-gray-300
-          callback: (value) => "₹" + value,
+          callback: (value) => currencySymbol + value,
         },
         grid: {
           color: "#374151", // dark grid

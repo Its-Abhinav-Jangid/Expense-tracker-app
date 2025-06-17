@@ -82,7 +82,14 @@ export const useUserDataStore = create((set, get) => ({
     dailyExpenseData: [],
   },
   income: [],
+  user: {
+    currencyCode: null,
+  },
 
+  setCurrencyCode: (currencyCode) => {
+    const current = get();
+    set({ user: { ...current.user, currencyCode: currencyCode } });
+  },
   setInitialData: (initialData) => {
     const current = get();
     const updatedExpenses = [...current.expenses, ...initialData.expenses];
@@ -101,6 +108,7 @@ export const useUserDataStore = create((set, get) => ({
         dailyExpenseData: [],
       },
       income: updatedIncome,
+      user: initialData.user,
     });
     get().sortExpenses();
     get().sortIncome();

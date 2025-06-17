@@ -21,16 +21,20 @@ export default async function fetchUserData() {
   };
 
   // Parallelize the requests
-  const [expensesRes, incomeRes] = await Promise.all([
+  const [expensesRes, incomeRes, currencyCodeRes] = await Promise.all([
     axios.get(
       `${baseURL}/api/expenses?startDate=${prevYear}&endDate=${tomorrow}`,
       headers
     ),
     axios.get(`${baseURL}/api/income`, headers),
+    axios.get(`${baseURL}/api/user/currency`, headers),
   ]);
 
   return {
     expenses: expensesRes.data,
     income: incomeRes.data,
+    user: {
+      currencyCode: currencyCodeRes.data.currencyCode,
+    },
   };
 }

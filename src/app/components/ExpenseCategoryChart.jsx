@@ -4,11 +4,15 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { useEffect, useState } from "react";
 import useLoadingStore from "@/stores/useIsLoadingStore";
 import { ExpenseCategoryChartSkeleton } from "./ExpenseCategoryChartSkeleton";
+import { currencyMap } from "../lib/constants/currencies";
+import { useUserDataStore } from "@/stores/useUserDataStore";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function ExpenseCategoryChart({ data }) {
   const isLoading = useLoadingStore((s) => s.isLoading);
+  const currencyCode = useUserDataStore((s) => s.user.currencyCode);
+
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
@@ -43,6 +47,8 @@ export default function ExpenseCategoryChart({ data }) {
   if (isLoading) {
     return <ExpenseCategoryChartSkeleton />;
   }
+  const currencySymbol = currencyMap[currencyCode]?.symbol;
+
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -60,7 +66,9 @@ export default function ExpenseCategoryChart({ data }) {
       tooltip: {
         callbacks: {
           label: (context) =>
-            `${context.label}: ₹${context.parsed.toLocaleString()}`,
+            `${context.label}: ${
+              currencySymbol + context.parsed.toLocaleString()
+            }`,
         },
       },
     },

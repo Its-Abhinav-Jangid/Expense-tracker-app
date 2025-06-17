@@ -17,7 +17,8 @@ export const IncomeForm = ({
   const addIncome = useUserDataStore((state) => state.addIncome);
   const editIncome = useUserDataStore((state) => state.editIncome);
   const rollback = useUserDataStore((state) => state.rollback);
-
+  const currencyCode = useUserDataStore((state) => state.user.currencyCode);
+  const currencySymbol = currencyMap[currencyCode]?.symbol;
   const [formData, setFormData] = useState({
     amount: amount || "",
     category: category || "Salary",
@@ -100,7 +101,7 @@ export const IncomeForm = ({
           {/* Amount Input */}
           <div>
             <label className="block text-sm font-medium mb-2 text-gray-300">
-              Amount (₹)
+              Amount {currencySymbol ? `(${currencySymbol})` : ""}
             </label>
             <input
               type="number"

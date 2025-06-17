@@ -10,6 +10,8 @@ import useIsMobile from "@/hooks/useIsMobile";
 import DeleteExpenseForm from "./DeleteExpenseForm";
 import { categoryColors, categoryIcons } from "../lib/constants/categoryIcons";
 import { HiOutlineCalendar } from "react-icons/hi";
+import { useUserDataStore } from "@/stores/useUserDataStore";
+import { currencyMap } from "../lib/constants/currencies";
 
 export const ExpenseItem = ({
   isOptimistic,
@@ -29,7 +31,8 @@ export const ExpenseItem = ({
     duration: isMobile ? 500 : 200,
     onLongPress: !isOptimistic ? enableOptionsMenu : "",
   });
-
+  const currencyCode = useUserDataStore((state) => state.user.currencyCode);
+  const currencySymbol = currencyMap[currencyCode]?.symbol;
   useEffect(() => {
     function handleClickOutside(event) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -102,7 +105,7 @@ export const ExpenseItem = ({
           </div>
 
           <span className="text-lg font-medium text-red-300">
-            - ₹{formatAmount(amount)}
+            - {currencySymbol + formatAmount(amount)}
           </span>
         </div>
         <div

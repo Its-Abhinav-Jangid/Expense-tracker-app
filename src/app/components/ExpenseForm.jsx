@@ -3,6 +3,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { useState } from "react";
 import { useUserDataStore } from "@/stores/useUserDataStore";
+import { currencyMap } from "../lib/constants/currencies";
 export const ExpenseForm = ({
   onClose,
   type = "add",
@@ -17,7 +18,8 @@ export const ExpenseForm = ({
   const rollback = useUserDataStore((state) => state.rollback);
   const addExpense = useUserDataStore((state) => state.addExpense);
   const editExpense = useUserDataStore((state) => state.editExpense);
-
+  const currencyCode = useUserDataStore((state) => state.user.currencyCode);
+  const currencySymbol = currencyMap[currencyCode]?.symbol;
   const [formData, setFormData] = useState({
     amount: amount,
     category: category,
@@ -93,7 +95,7 @@ export const ExpenseForm = ({
           {/* Amount Input */}
           <div>
             <label className="block text-sm font-medium mb-2 text-gray-300">
-              Amount (₹)
+              Amount {currencySymbol ? `(${currencySymbol})` : ""}
             </label>
             <input
               type="number"

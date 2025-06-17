@@ -1,7 +1,13 @@
 "use client";
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import { FaSignOutAlt, FaBug, FaInfoCircle, FaComments } from "react-icons/fa";
+import {
+  FaSignOutAlt,
+  FaBug,
+  FaInfoCircle,
+  FaComments,
+  FaMoneyBill,
+} from "react-icons/fa";
 
 import dynamic from "next/dynamic";
 
@@ -12,14 +18,21 @@ const LogoutModal = dynamic(() => import("../components/LogoutModal"), {
   ssr: false,
 });
 import { useSession } from "next-auth/react";
+import { useUserDataStore } from "@/stores/useUserDataStore";
+import { currencyMap } from "../lib/constants/currencies";
+import ReactCountryFlag from "react-country-flag";
+import useLoadingStore from "@/stores/useIsLoadingStore";
+import CurrencyModal from "../components/CurrencyModal";
 
 const MoreTab = () => {
   const { data: session, status } = useSession();
-
+  const isLoading = useLoadingStore((state) => state.isLoading);
   const [isFeedbackMOdalOpen, setIsFeedbackModalOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isCurrencyModalOpen, setIsCurrencyModalOpen] = useState(false);
   const [modalType, setModalType] = useState("bug");
-
+  const currencyCode = useUserDataStore((state) => state.user.currencyCode);
+  const currency = currencyMap[currencyCode];
   const appVersion = useMemo(
     () => process.env.NEXT_PUBLIC_APP_VERSION || "N/A",
     []
@@ -68,7 +81,7 @@ const MoreTab = () => {
             <span className="text-gray-400">Logged in as:</span>
             <span className="text-indigo-400">
               {status === "loading" ? (
-                <div className="h-4 bg-gray-700 rounded-full w-32" />
+                <div className="animate-pulse h-4 bg-gray-700 rounded-full w-32" />
               ) : (
                 session.user.email
               )}
@@ -80,6 +93,39 @@ const MoreTab = () => {
           >
             <FaSignOutAlt className="mr-2" />
             Logout
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-gray-800 mx-4 rounded-xl mb-6 overflow-hidden">
+        <h2 className="text-lg font-medium px-6 py-4 border-b border-gray-700">
+          Settings
+        </h2>
+        <div className="p-6">
+          <button
+            className="flex items-center justify-between w-full py-3 hover:bg-gray-700 px-3 rounded-lg transition-colors"
+            onClick={() => setIsCurrencyModalOpen(true)} // optional modal
+          >
+            <div className="flex items-center">
+              <FaMoneyBill className="mr-3 text-xl text-green-400" />
+              <span>Currency</span>
+            </div>
+
+            {isLoading ? (
+              <div className="animate-pulse bg-gray-700 rounded-sm w-[2.1rem] h-[1.5rem]" />
+            ) : (
+              <div className="flex items-center space-x-2">
+                <ReactCountryFlag
+                  countryCode={currency.countryCode}
+                  svg
+                  className="rounded-sm"
+                  style={{ width: "1.9rem", height: "1.4rem" }}
+                />
+                <span className="text-sm font-medium text-gray-300">
+                  {currency.code}
+                </span>
+              </div>
+            )}
           </button>
         </div>
       </div>
@@ -133,6 +179,12 @@ const MoreTab = () => {
       )}
       {isLogoutModalOpen && (
         <LogoutModal onClose={() => setIsLogoutModalOpen(false)} />
+      )}
+      {isCurrencyModalOpen && (
+        <CurrencyModal
+          currentCurrency={currencyCode}
+          onClose={() => setIsCurrencyModalOpen(false)}
+        />
       )}
     </div>
   );
