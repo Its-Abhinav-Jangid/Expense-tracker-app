@@ -4,11 +4,14 @@ import { useEffect, useState } from "react";
 import filterIncome from "../lib/filterIncome";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { useUserDataStore } from "@/stores/useUserDataStore";
+import useLoadingStore from "@/stores/useIsLoadingStore";
 const SmartAITip = ({ incomeData, expenseData }) => {
   const [aiTip, setAiTip] = useState(null);
   const [loading, setLoading] = useState(true);
   const types = ["budgeting", "investment", "debt", "savings"];
-
+  const currencyCode = useUserDataStore((state) => state.user.currencyCode);
+  const isLoading = useLoadingStore((state) => state.isLoading);
   useEffect(() => {
     const filteredIncome = filterIncome({
       incomeData: incomeData,
@@ -19,21 +22,24 @@ const SmartAITip = ({ incomeData, expenseData }) => {
       setLoading(true);
       const tipType = types[Math.floor(Math.random() * types.length)];
       try {
-        const { data } = await axios.post("/api/ai/tip", {
-          incomeData: filteredIncome,
-          expenseData,
-          type: tipType,
-        });
-
-        if (data.role === "assistant") {
-          setAiTip({
-            title: `Smart ${
-              tipType[0].toUpperCase() + tipType.substring(1)
-            } tip`,
-            content: data.content,
+        if (!isLoading) {
+          const { data } = await axios.post("/api/ai/tip", {
+            incomeData: filteredIncome,
+            expenseData,
+            type: tipType,
+            userCurrency: currencyCode,
           });
-        } else {
-          console.error("AI error:", data.content);
+
+          if (data.role === "assistant") {
+            setAiTip({
+              title: `Smart ${
+                tipType[0].toUpperCase() + tipType.substring(1)
+              } tip`,
+              content: data.content,
+            });
+          } else {
+            console.error("AI error:", data.content);
+          }
         }
       } catch (err) {
         console.error("Failed to fetch AI tip:", err);
@@ -42,9 +48,9 @@ const SmartAITip = ({ incomeData, expenseData }) => {
     };
 
     fetchAITip();
-  }, []);
+  }, [isLoading]);
 
-  if (loading) {
+  if (loading || isLoading) {
     return (
       <div className="relative max-w-100">
         <div className="bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 rounded-2xl p-0.5 shadow-lg transform transition-all duration-300 hover:scale-[1.015] hover:shadow-xl">
@@ -102,7 +108,7 @@ const SmartAITip = ({ incomeData, expenseData }) => {
     );
   }
 
-  if (!aiTip) return null;
+  if (!aiTip && !isLoading) return null;
 
   return (
     <div className="relative max-w-100">

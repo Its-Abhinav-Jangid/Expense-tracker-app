@@ -8,13 +8,14 @@ import { AiChatButton } from "./components/AiChatButton";
 import BalanceSheet from "./components/BalanceSheet";
 import "./globals.css";
 import { useUserDataStore } from "@/stores/useUserDataStore";
-import useLoadingStore from "@/stores/useIsLoadingStore";
-import CurrencyForm from "./components/CurrencyModal";
+import { currencyMap } from "./lib/constants/currencies";
 
 export default function Page() {
   const expenses = useUserDataStore((state) => state.expenses);
   const expensesSummary = useUserDataStore((state) => state.expensesSummary);
   const income = useUserDataStore((state) => state.income);
+  const currencyCode = useUserDataStore((state) => state.user.currencyCode);
+  const currencySymbol = currencyMap[currencyCode]?.symbol;
 
   const last7DaysData = expensesSummary.dailyExpenseData.slice(
     expensesSummary.dailyExpenseData.length - 7 > 0
@@ -32,7 +33,7 @@ export default function Page() {
     labels: last7DaysName,
     datasets: [
       {
-        label: "Expenses (₹)",
+        label: `Expenses ${currencySymbol ? `(${currencySymbol})` : ""}`,
         data: last7DaysDataChart,
         borderColor: "rgba(185, 28, 28, 1)", // red-700
         backgroundColor: "rgba(220, 38, 38, 0.7)", // red-600

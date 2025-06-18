@@ -16,6 +16,7 @@ export async function POST(request) {
 
   const userIncome = payload.incomeData;
   const userExpenses = payload.expenseData;
+  const userCurrency = payload.userCurrency;
   const financialInsightPrompts = [
     {
       type: "budgeting",
@@ -25,7 +26,7 @@ export async function POST(request) {
 
 The user is seeking budgeting advice.
 
-Income Summary (last 1 year): ₹${userIncome.total}
+Income Summary (last 1 year): ${userCurrency + userIncome.total}
 Expense Summary (last 1 year): ${JSON.stringify(userExpenses)}
 
 Give one personalized budgeting tip the user can apply immediately. Keep it practical, short, and encouraging. Keep response of 1-5 lines.`,
@@ -39,9 +40,9 @@ Give one personalized budgeting tip the user can apply immediately. Keep it prac
 
 The user is interested in investment advice.
 
-Their annual income is ₹${userIncome.total}. Their expenses: ${JSON.stringify(
-          userExpenses
-        )}
+Their annual income is ${
+          userCurrency + userIncome.total
+        }. Their expenses: ${JSON.stringify(userExpenses)}
 
 Suggest one actionable and safe investment tip for long-term financial growth. Avoid jargon and keep it easy to understand. Keep response of 1-5 lines.`,
       }),
@@ -54,7 +55,7 @@ Suggest one actionable and safe investment tip for long-term financial growth. A
 
 The user wants help with debt management.
 
-Their income last year: ₹${userIncome.total}
+Their income last year: ${userCurrency + userIncome.total}
 Expenses summary: ${JSON.stringify(userExpenses)}
 
 Suggest one effective way to reduce or manage debt better. Be friendly and concise. Keep response of 1-5 lines.`,
@@ -68,8 +69,8 @@ Suggest one effective way to reduce or manage debt better. Be friendly and conci
 
 The user wants to increase their savings.
 
-They earned ₹${
-          userIncome.total
+They earned ${
+          userCurrency + userIncome.total
         } and spent across these categories: ${JSON.stringify(userExpenses)}
 
 Give one high-impact savings tip that can help them save 10% more over the next few months. Be short, actionable, and positive.

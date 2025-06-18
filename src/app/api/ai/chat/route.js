@@ -52,6 +52,14 @@ export async function POST(request) {
       userId: session.user.id,
     },
   });
+  const userCurrency = await prisma.user.findUnique({
+    select: {
+      currencyCode: true,
+    },
+    where: {
+      id: session.user.id,
+    },
+  });
 
   const chatHistory = [];
   const systemPrompt = {
@@ -66,7 +74,7 @@ ${JSON.stringify(userExpenses)}
 Here is a summary of their income:
 ${JSON.stringify(userIncome)}
 
-The currency is ₹
+The currency is ${userCurrency.currencyCode}
 
 You should only answer questions related to personal finance, budgeting, savings, or expenses.
 If the user's query is irrelevant (e.g., not about finance), kindly remind them that you are a financial assistant and can only help with finance-related questions.
