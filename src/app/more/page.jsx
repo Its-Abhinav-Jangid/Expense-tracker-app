@@ -11,12 +11,8 @@ import {
 
 import dynamic from "next/dynamic";
 
-const FeedbackModal = dynamic(() => import("@/app/components/FeedbackModal"), {
-  ssr: false,
-});
-const LogoutModal = dynamic(() => import("../components/LogoutModal"), {
-  ssr: false,
-});
+const FeedbackModal = dynamic(() => import("@/app/components/FeedbackModal"));
+const LogoutModal = dynamic(() => import("../components/LogoutModal"));
 import { useSession } from "next-auth/react";
 import { useUserDataStore } from "@/stores/useUserDataStore";
 import { currencyMap } from "../lib/constants/currencies";

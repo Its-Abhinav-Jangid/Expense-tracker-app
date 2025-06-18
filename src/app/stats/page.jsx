@@ -7,15 +7,14 @@ const BalanceSheet = dynamic(() => import("../components/BalanceSheet"), {
 });
 const MonthlyTrendChart = dynamic(
   () => import("../components/MonthlyTrendChart"),
-  { ssr: false, loading: () => <MonthlyTrendChartSkeleton /> }
+  { loading: () => <MonthlyTrendChartSkeleton /> }
 );
 const SmartAITip = dynamic(() => import("../components/SmartAITip"), {
-  ssr: false,
   loading: () => <SmartAITipSkeleton />,
 });
 const ExpenseCategoryChart = dynamic(
   () => import("../components/ExpenseCategoryChart"),
-  { ssr: false, loading: () => <ExpenseCategoryChartSkeleton /> }
+  { loading: () => <ExpenseCategoryChartSkeleton /> }
 );
 import filterByCategories from "../lib/filterByCategories";
 import SmartAITipSkeleton from "../components/SmartAITipSkeleton";

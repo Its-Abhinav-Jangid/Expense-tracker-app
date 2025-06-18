@@ -117,7 +117,17 @@ Keep response of 1-5 lines.`,
     );
   } catch (error) {
     console.error(error);
-
+    if (error.status === 429) {
+      return new Response(
+        JSON.stringify({
+          role: "error",
+          content: "Too many requests",
+        }),
+        {
+          status: 429,
+        }
+      );
+    }
     return new Response(
       JSON.stringify({
         role: "error",

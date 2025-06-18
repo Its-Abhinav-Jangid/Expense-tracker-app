@@ -6,19 +6,15 @@ const ExpensesList = dynamic(() => import("../components/ExpensesList"), {
 });
 
 const ExpenseChart = dynamic(() => import("../components/ExpenseChart"), {
-  ssr: false,
   loading: () => <ExpenseChartSkeleton />,
 });
 const ExpenseSummary = dynamic(() => import("../components/ExpenseSummary"), {
   loading: () => <ExpenseSummarySkeleton />,
 });
 
-const AiChatButton = dynamic(() => import("../components/AiChatButton"), {
-  ssr: false,
-});
+const AiChatButton = dynamic(() => import("../components/AiChatButton"), {});
 const BalanceSheet = dynamic(() => import("../components/BalanceSheet"), {
   loading: () => <BalanceSheetSkeleton />,
-  ssr: false,
 });
 import "../globals.css";
 import { useUserDataStore } from "@/stores/useUserDataStore";
