@@ -2,7 +2,7 @@ import useLoadingStore from "@/stores/useIsLoadingStore";
 import { formatAmount } from "../lib/formatAmount";
 import { useUserDataStore } from "@/stores/useUserDataStore";
 import { currencyMap } from "../lib/constants/currencies";
-export const ExpenseSummary = (props) => {
+const ExpenseSummary = (props) => {
   const isLoading = useLoadingStore((s) => s.isLoading);
   const currencyCode = useUserDataStore((s) => s.user.currencyCode);
   const currencySymbol = currencyMap[currencyCode]?.symbol;
@@ -35,3 +35,4 @@ export const ExpenseSummary = (props) => {
     </div>
   );
 };
+export default ExpenseSummary;

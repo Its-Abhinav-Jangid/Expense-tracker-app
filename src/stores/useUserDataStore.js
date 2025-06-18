@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { create } from "zustand";
 
 // Helper to calculate highest expense
@@ -8,7 +9,7 @@ function calculateHighest(expenses) {
     0
   );
 }
-function calculateExpensesSummary(expenses) {
+const calculateExpensesSummary = function (expenses) {
   // Get current date in UTC
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
@@ -71,6 +72,10 @@ function calculateExpensesSummary(expenses) {
   }
 
   return summary;
+};
+function sortData(data) {
+  const result = [...data].sort((a, b) => new Date(b.date) - new Date(a.date));
+  return result;
 }
 
 export const useUserDataStore = create((set, get) => ({
@@ -92,16 +97,19 @@ export const useUserDataStore = create((set, get) => ({
   },
   setInitialData: (initialData) => {
     const current = get();
-    const updatedExpenses = [...current.expenses, ...initialData.expenses];
-    const updatedIncome = [...current.income, ...initialData.income];
-    let newTotal = 0;
-    for (let expense of updatedExpenses) {
-      newTotal += expense.amount;
+    const updatedExpenses = sortData([
+      ...current.expenses,
+      ...initialData.expenses,
+    ]);
+    const updatedIncome = sortData([...current.income, ...initialData.income]);
+    let updatedSummary = initialData.prev30DaysExpensesSummary;
+    if (current.expenses.length > 0) {
+      updatedSummary = calculateExpensesSummary(updatedExpenses);
     }
 
     set({
       expenses: updatedExpenses,
-      expensesSummary: calculateExpensesSummary(updatedExpenses) || {
+      expensesSummary: updatedSummary || {
         count: 0,
         highest: 0,
         total: 0,
@@ -110,8 +118,6 @@ export const useUserDataStore = create((set, get) => ({
       income: updatedIncome,
       user: initialData.user,
     });
-    get().sortExpenses();
-    get().sortIncome();
   },
 
   addExpense: ({ dummyId, amount, category, date, isOptimistic, notes }) => {

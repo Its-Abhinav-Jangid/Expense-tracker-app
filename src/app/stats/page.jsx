@@ -1,11 +1,27 @@
 "use client";
+import dynamic from "next/dynamic";
 import React, { useMemo } from "react";
 import { useUserDataStore } from "@/stores/useUserDataStore";
-import BalanceSheet from "../components/BalanceSheet";
-import MonthlyTrendChart from "../components/MonthlyTrendChart";
-import SmartAITip from "../components/SmartAITip";
+const BalanceSheet = dynamic(() => import("../components/BalanceSheet"), {
+  loading: () => <BalanceSheetSkeleton />,
+});
+const MonthlyTrendChart = dynamic(
+  () => import("../components/MonthlyTrendChart"),
+  { ssr: false, loading: () => <MonthlyTrendChartSkeleton /> }
+);
+const SmartAITip = dynamic(() => import("../components/SmartAITip"), {
+  ssr: false,
+  loading: () => <SmartAITipSkeleton />,
+});
+const ExpenseCategoryChart = dynamic(
+  () => import("../components/ExpenseCategoryChart"),
+  { ssr: false, loading: () => <ExpenseCategoryChartSkeleton /> }
+);
 import filterByCategories from "../lib/filterByCategories";
-import ExpenseCategoryChart from "../components/ExpenseCategoryChart";
+import SmartAITipSkeleton from "../components/SmartAITipSkeleton";
+import BalanceSheetSkeleton from "../components/BalanceSheetSkeleton";
+import { MonthlyTrendChartSkeleton } from "../components/MonthlyTrendChartSkeleton";
+import { ExpenseCategoryChartSkeleton } from "../components/ExpenseCategoryChartSkeleton";
 
 function Stats() {
   const expenses = useUserDataStore((state) => state.expenses);

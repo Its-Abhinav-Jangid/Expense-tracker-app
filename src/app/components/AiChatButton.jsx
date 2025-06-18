@@ -6,7 +6,7 @@ import { FaTimes } from "react-icons/fa";
 
 import { RiGeminiFill } from "react-icons/ri";
 
-export function AiChatButton() {
+export default function AiChatButton() {
   const [isOpen, setIsOpen] = useState(false);
 
   function closeModal() {
