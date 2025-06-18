@@ -3,6 +3,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import { useState } from "react";
 import { useUserDataStore } from "@/stores/useUserDataStore";
+import { currencyMap } from "../lib/constants/currencies";
 export const IncomeForm = ({
   onClose,
   type,
