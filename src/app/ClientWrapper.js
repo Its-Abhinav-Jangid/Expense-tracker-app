@@ -5,8 +5,9 @@ import { useUserDataStore } from "@/stores/useUserDataStore";
 import useLoadingStore from "@/stores/useIsLoadingStore";
 import CurrencyModal from "./components/CurrencyModal";
 import { useRouter } from "next/navigation";
+import fetchUserData from "./lib/fetchUserData";
 
-export default function ClientWrapper({ initialData, children }) {
+export default function ClientWrapper({ children }) {
   const setInitialData = useUserDataStore((state) => state.setInitialData);
   const setIsLoading = useLoadingStore((state) => state.setIsLoading);
   const isLoading = useLoadingStore((state) => state.isLoading);
@@ -14,13 +15,12 @@ export default function ClientWrapper({ initialData, children }) {
   const router = useRouter();
   useEffect(() => {
     async function setData() {
-      if (initialData) {
-        setInitialData(initialData);
-        setIsLoading(false);
-      }
+      const initialData = await fetchUserData();
+      setInitialData(initialData);
+      setIsLoading(false);
     }
     setData();
-  }, [setInitialData, setIsLoading, initialData]);
+  }, [setInitialData, setIsLoading]);
 
   return !isLoading && !user.currencyCode ? (
     <CurrencyModal onClose={() => router.push("/")} canDismiss={false} />
