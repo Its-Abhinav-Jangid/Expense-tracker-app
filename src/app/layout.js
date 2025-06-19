@@ -4,15 +4,17 @@ import ClientWrapper from "./ClientWrapper";
 import { SessionProvider } from "next-auth/react";
 
 export const metadata = {
-  title: "Expense Tracker App",
+  title: "Spenlys",
   description:
-    "An app which allows users to add and track their expenses and view their spending habits",
+    "An app which allows users to add and track their finances and view their spending habits",
+  manifest: "/manifest.json",
 };
 
 export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        <link rel="manifest" href="/manifest.json" />
         <meta name="apple-mobile-web-app-title" content="Spenlys" />
       </head>
       <body className="min-h-screen text-white bg-gray-900 pb-[100px]">

@@ -12,30 +12,29 @@ Track your expenses effortlessly and stay in control of your finances.
 
 ## 📸 Screenshots
 
-![Dashboard Screenshot](./screenshots/Dashboard.png)
-![AI Chat Screenshot](./screenshots/AI.png)
-![Add Expense Screenshot](./screenshots/Add.png)
+![Dashboard Screenshot](./public/screenshots/Dashboard.png)
+![AI Chat Screenshot](./public/screenshots/AI.png)
+![Stats Screenshot](./public/screenshots/Stats.png)
+![History Screenshot](./public/screenshots/History.png)
+![More Screenshot](./public/screenshots/More.png)
+![Add Expense Screenshot](./public/screenshots/Add.png)
 
 ## ✅ Features
 
-- Add and save expenses to the cloud
-- Last 30 days expense overview
-- GitHub OAuth login
+- Add and save expenses and income to the cloud
+- GitHub and Google OAuth login
 - Experimental AI assistant for insights
 
 ## 🚧 Known Limitations
 
-- Only GitHub login (Google coming soon)
-- No full reports yet (monthly/yearly)
 - AI assistant may stop due to limited API credits
-- Only last 30 days of data shown
+- Some bugs may arise
 
 ## 🔮 Coming Soon
 
-- Google & other login options
-- Full expense reporting
 - Recurring expenses
 - AI upgrades (possibly premium)
+- Better Stability
 
 ## 📜 License
 

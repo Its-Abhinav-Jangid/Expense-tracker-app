@@ -1,3 +1,5 @@
+import withPWA from "next-pwa";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -13,5 +15,19 @@ const nextConfig = {
     ],
   },
 };
+console.log(process.env.NODE_ENV);
 
-export default nextConfig;
+const pwaConfig = withPWA({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === "development",
+  // Add buildExcludes for App Router
+  buildExcludes: [
+    /middleware-manifest\.json$/,
+    /_middleware\.js$/,
+    /middleware-runtime\.js$/,
+  ],
+});
+
+export default pwaConfig(nextConfig);
