@@ -63,7 +63,7 @@ export function AddButton() {
         <AnimatePresence>
           {isDropdownOpen && (
             <motion.div
-              className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 z-80!"
+              className="absolute bottom-full left-[-100%] mb-3 z-80!"
               initial={{ opacity: 0, y: 20, scale: 0.8 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.8 }}
