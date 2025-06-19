@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   FaBug,
   FaComments,
@@ -9,6 +9,7 @@ import {
   FaSpinner,
 } from "react-icons/fa";
 import FeedbackSuccessToast from "./FeedbackSuccessToast";
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 
 const FeedbackModal = ({ onClose, type, email = "" }) => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,19 @@ const FeedbackModal = ({ onClose, type, email = "" }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isToastVisible, setIsToastVisible] = useState(false);
   const [error, setError] = useState(null);
+  const modalRef = useRef();
+
+  useEffect(() => {
+    if (modalRef.current) {
+      disableBodyScroll(modalRef.current);
+    }
+  }, []);
+  function closeModal() {
+    if (modalRef.current) {
+      enableBodyScroll(modalRef.current);
+    }
+    onClose();
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,8 +46,9 @@ const FeedbackModal = ({ onClose, type, email = "" }) => {
       });
 
       setIsToastVisible(true);
+      if (modalRef.current) enableBodyScroll(modalRef.current);
       setTimeout(() => {
-        onClose();
+        closeModal();
 
         setIsToastVisible(false);
       }, 5000);
@@ -59,7 +74,10 @@ const FeedbackModal = ({ onClose, type, email = "" }) => {
   return (
     <>
       {!isToastVisible ? (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div
+          ref={modalRef}
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+        >
           <div className="bg-gray-800 rounded-xl max-w-md w-full p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold flex items-center">
@@ -74,7 +92,7 @@ const FeedbackModal = ({ onClose, type, email = "" }) => {
                 )}
               </h2>
               <button
-                onClick={onClose}
+                onClick={closeModal}
                 className="text-gray-400 hover:text-white text-xl"
                 aria-label="Close modal"
                 disabled={isSubmitting}
@@ -151,9 +169,11 @@ const FeedbackModal = ({ onClose, type, email = "" }) => {
         </div>
       ) : (
         <FeedbackSuccessToast
-          message={`Your ${type === "bug" ? "bug report" : "feedback"} has been submitted successfully!`}
+          message={`Your ${
+            type === "bug" ? "bug report" : "feedback"
+          } has been submitted successfully!`}
           onDismiss={() => {
-            onClose();
+            closeModal();
           }}
         />
       )}

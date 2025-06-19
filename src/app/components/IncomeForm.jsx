@@ -1,9 +1,10 @@
 "use client";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useUserDataStore } from "@/stores/useUserDataStore";
 import { currencyMap } from "../lib/constants/currencies";
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 export const IncomeForm = ({
   onClose,
   type,
@@ -29,6 +30,18 @@ export const IncomeForm = ({
       ? new Date(date).toISOString().split("T")[0]
       : new Date().toISOString().split("T")[0],
   });
+  const modalRef = useRef();
+  useEffect(() => {
+    if (modalRef.current) {
+      disableBodyScroll(modalRef.current);
+    }
+  }, []);
+  function closeModal() {
+    if (modalRef.current) {
+      enableBodyScroll(modalRef.current);
+    }
+    onClose();
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -39,7 +52,7 @@ export const IncomeForm = ({
         return;
       }
       try {
-        onClose(); // close the modal
+        closeModal(); // close the modal
         editIncome({
           id: id,
           ...formData,
@@ -55,7 +68,7 @@ export const IncomeForm = ({
     } else {
       const dummyId = new Date().toISOString();
       try {
-        onClose(); // close the modal
+        closeModal(); // close the modal
         addIncome({
           id: dummyId,
           isOptimistic: true,
@@ -80,6 +93,7 @@ export const IncomeForm = ({
 
   return (
     <div
+      ref={modalRef}
       style={{ zIndex: 100000 }}
       className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
     >
@@ -90,7 +104,7 @@ export const IncomeForm = ({
             {type === "edit" ? "Edit Income" : "Add Income"}
           </h2>
           <button
-            onClick={onClose}
+            onClick={closeModal}
             className="p-1 hover:bg-gray-700 rounded-lg transition-colors"
           >
             <XMarkIcon className="w-6 h-6" />
@@ -187,7 +201,7 @@ export const IncomeForm = ({
           <div className="grid grid-cols-2 gap-4 mt-8">
             <button
               type="button"
-              onClick={onClose}
+              onClick={closeModal}
               className="py-3 px-6 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-gray-300"
             >
               Cancel

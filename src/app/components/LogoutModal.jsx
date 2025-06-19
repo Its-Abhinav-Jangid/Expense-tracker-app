@@ -1,9 +1,26 @@
 import { FaSignOutAlt, FaTimes } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { logout } from "@/app/lib/actions/auth";
+import { useEffect, useRef } from "react";
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 const LogoutModal = ({ onClose }) => {
+  const modalRef = useRef();
+  useEffect(() => {
+    if (modalRef.current) {
+      disableBodyScroll(modalRef.current);
+    }
+  }, []);
+  function closeModal() {
+    if (modalRef.current) {
+      enableBodyScroll(modalRef.current);
+    }
+    onClose();
+  }
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div
+      ref={modalRef}
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+    >
       <div className="bg-gray-800 rounded-xl max-w-md w-full p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold flex items-center">
@@ -11,7 +28,7 @@ const LogoutModal = ({ onClose }) => {
             Confirm Logout
           </h2>
           <button
-            onClick={onClose}
+            onClick={closeModal}
             className="text-gray-400 hover:text-white text-xl"
             aria-label="Close modal"
           >
@@ -25,7 +42,7 @@ const LogoutModal = ({ onClose }) => {
 
         <div className="flex space-x-4">
           <button
-            onClick={onClose}
+            onClick={closeModal}
             className="flex-1 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg font-medium"
           >
             Cancel

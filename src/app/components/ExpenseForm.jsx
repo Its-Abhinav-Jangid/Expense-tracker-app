@@ -1,9 +1,10 @@
 "use client";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useUserDataStore } from "@/stores/useUserDataStore";
 import { currencyMap } from "../lib/constants/currencies";
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 export const ExpenseForm = ({
   onClose,
   type = "add",
@@ -27,12 +28,23 @@ export const ExpenseForm = ({
     notes: notes || "",
     user_id: user_id,
   });
-
+  const modalRef = useRef();
+  useEffect(() => {
+    if (modalRef.current) {
+      disableBodyScroll(modalRef.current);
+    }
+  }, []);
+  function closeModal() {
+    if (modalRef.current) {
+      enableBodyScroll(modalRef.current);
+    }
+    onClose();
+  }
   async function handleSubmit(e) {
     e.preventDefault();
     if (type === "edit" && expenseId) {
       try {
-        onClose(); // close the modal
+        closeModal(); // close the modal
         editExpense({ id: expenseId, ...formData });
         await axios.put(`/api/expenses/${expenseId}`, formData);
       } catch (error) {
@@ -43,7 +55,7 @@ export const ExpenseForm = ({
     } else {
       try {
         const dummyId = new Date().toISOString();
-        onClose(); // close the modal
+        closeModal(); // close the modal
         addExpense({
           ...formData,
           dummyId: dummyId,
@@ -73,6 +85,7 @@ export const ExpenseForm = ({
 
   return (
     <div
+      ref={modalRef}
       style={{ margin: 0, zIndex: 1000000 }}
       className="text-white fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
     >
@@ -83,7 +96,7 @@ export const ExpenseForm = ({
             {type === "edit" ? "Edit" : "Add New"} Expense
           </h2>
           <button
-            onClick={onClose}
+            onClick={closeModal}
             className="p-1 hover:bg-gray-700 rounded-lg transition-colors"
           >
             <XMarkIcon className="w-6 h-6" />
@@ -176,7 +189,7 @@ export const ExpenseForm = ({
           <div className="grid grid-cols-2 gap-4 mt-8">
             <button
               type="button"
-              onClick={onClose}
+              onClick={closeModal}
               className="py-3 px-6 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-gray-300"
             >
               Cancel

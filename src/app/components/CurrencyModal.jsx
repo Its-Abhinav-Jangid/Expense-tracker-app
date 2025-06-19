@@ -1,21 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import currencies from "@/app/lib/constants/currencies"; // Your currencies data
 import axios from "axios";
 import { useUserDataStore } from "@/stores/useUserDataStore";
 import { FaTimes } from "react-icons/fa"; // Import the close icon
-
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 const CurrencyModal = ({
   canDismiss = true,
   currentCurrency = "",
   onClose,
 }) => {
+  const modalRef = useRef();
+  useEffect(() => {
+    if (modalRef.current) {
+      disableBodyScroll(modalRef.current);
+    }
+  }, []);
   const [selectedCurrency, setSelectedCurrency] = useState(
     currentCurrency || ""
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const setCurrencyCode = useUserDataStore((state) => state.setCurrencyCode);
-
+  function closeModal() {
+    if (modalRef.current) {
+      enableBodyScroll(modalRef.current);
+    }
+    onClose();
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedCurrency) return alert("Please select a currency");
@@ -27,7 +38,7 @@ const CurrencyModal = ({
       });
       setCurrencyCode(res.data.currencyCode);
 
-      onClose(); // Close modal on success
+      closeModal(); // Close modal on success
     } catch (error) {
       console.error(error);
       alert("Some error occured! Please try again.");
@@ -37,12 +48,15 @@ const CurrencyModal = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+    <div
+      ref={modalRef}
+      className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50"
+    >
       <div className="bg-gray-800 rounded-2xl shadow-xl max-w-md w-full overflow-hidden border border-gray-700 relative">
         {/* Close button */}
         {canDismiss && (
           <button
-            onClick={canDismiss ? onClose : () => {}}
+            onClick={canDismiss ? closeModal : () => {}}
             className="absolute top-4 right-4 text-gray-400 hover:text-gray-200 transition-colors duration-200 focus:outline-none"
             aria-label="Close currency selection"
           >
@@ -76,7 +90,7 @@ const CurrencyModal = ({
             </p>
           </div>
           <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 max-h-96 overflow-y-auto p-1">
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 max-h-72 overflow-y-auto p-1">
               {currencies.map((currency) => (
                 <div
                   key={currency.code}

@@ -2,15 +2,28 @@
 import axios from "axios";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useUserDataStore } from "@/stores/useUserDataStore";
+import { useEffect, useRef } from "react";
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 
 function DeleteIncomeForm({ incomeId, onClose }) {
   const snapshot = JSON.parse(JSON.stringify(useUserDataStore.getState()));
   const deleteIncome = useUserDataStore((state) => state.deleteIncome);
   const rollback = useUserDataStore((state) => state.rollback);
-
+  const modalRef = useRef();
+  useEffect(() => {
+    if (modalRef.current) {
+      disableBodyScroll(modalRef.current);
+    }
+  }, []);
+  function closeModal() {
+    if (modalRef.current) {
+      enableBodyScroll(modalRef.current);
+    }
+    onClose();
+  }
   async function onDelete() {
     try {
-      onClose();
+      closeModal();
       deleteIncome(incomeId);
       await axios.delete(`/api/income/${incomeId}`);
     } catch (error) {
@@ -21,6 +34,7 @@ function DeleteIncomeForm({ incomeId, onClose }) {
   }
   return (
     <div
+      ref={modalRef}
       style={{
         margin: 0,
       }}
@@ -31,7 +45,7 @@ function DeleteIncomeForm({ incomeId, onClose }) {
         <div className="flex justify-between items-center p-5 border-b border-gray-700">
           <h3 className="text-xl font-semibold text-gray-200">Delete Income</h3>
           <button
-            onClick={onClose}
+            onClick={closeModal}
             className="text-gray-400 hover:text-gray-200 transition-colors"
           >
             <XMarkIcon className="w-6 h-6" />
@@ -71,7 +85,7 @@ function DeleteIncomeForm({ incomeId, onClose }) {
         {/* Modal Footer */}
         <div className="bg-gray-800 p-5 flex justify-end space-x-3 border-t border-gray-700">
           <button
-            onClick={onClose}
+            onClick={closeModal}
             className="px-5 py-2.5 rounded-lg border border-gray-600 text-gray-300 hover:bg-gray-700 transition-colors duration-200"
           >
             Cancel

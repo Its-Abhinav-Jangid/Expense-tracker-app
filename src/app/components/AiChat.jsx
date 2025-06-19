@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Leapfrog } from "ldrs/react";
 import "ldrs/react/Leapfrog.css";
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 
 export function AiChat({ onClose }) {
   const [inputText, setInputText] = useState("");
@@ -28,6 +29,18 @@ export function AiChat({ onClose }) {
       });
     }
   });
+  const modalRef = useRef();
+  useEffect(() => {
+    if (modalRef.current) {
+      disableBodyScroll(modalRef.current);
+    }
+  }, []);
+  function closeModal() {
+    if (modalRef.current) {
+      enableBodyScroll(modalRef.current);
+    }
+    onClose();
+  }
   async function handleSubmit() {
     if (inputText.trim().length < 1) {
       return;
@@ -62,6 +75,7 @@ export function AiChat({ onClose }) {
   }
   return (
     <div
+      ref={modalRef}
       className="fixed inset-0 bg-slate-900/95 backdrop-blur-sm z-40"
       style={{ margin: 0 }}
     >
@@ -85,7 +99,7 @@ export function AiChat({ onClose }) {
             <h2 className="text-white text-lg font-semibold">AI Assistant</h2>
           </div>
           <button
-            onClick={onClose}
+            onClick={closeModal}
             className="text-slate-400 hover:text-white transition-colors"
           >
             ✕
