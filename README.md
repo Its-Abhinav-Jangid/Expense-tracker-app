@@ -12,7 +12,7 @@ Track your expenses effortlessly and stay in control of your finances.
 
 ## 📸 Screenshots
 
-![Dashboard Screenshot](./public/screenshots/Dashboard.png)
+![Dashboard Screenshot](./public/screenshots/dashboard.png)
 ![AI Chat Screenshot](./public/screenshots/AI.png)
 ![Stats Screenshot](./public/screenshots/Stats.png)
 ![History Screenshot](./public/screenshots/History.png)
