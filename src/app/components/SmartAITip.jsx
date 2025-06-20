@@ -149,7 +149,7 @@ function AITipCardError({ onRetry, error }) {
       case 401:
         return "Authentication required. Please sign in again.";
       case 500:
-        return "Internal server error. Our team has been notified.";
+        return "Internal server error.";
       default:
         if (typeof error.code === "number") {
           return `Server error (${error.code})`;
