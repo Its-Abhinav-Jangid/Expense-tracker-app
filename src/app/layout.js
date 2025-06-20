@@ -7,7 +7,6 @@ export const metadata = {
   title: "Spenlys",
   description:
     "An app which allows users to add and track their finances and view their spending habits",
-  manifest: "/manifest.json",
 };
 
 export default async function RootLayout({ children }) {
