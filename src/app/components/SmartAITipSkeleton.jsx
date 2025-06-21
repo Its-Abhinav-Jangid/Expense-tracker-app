@@ -47,9 +47,9 @@ function SmartAITipSkeleton() {
               <div className="h-4 bg-gray-700 rounded-full w-1/3 mb-1" />
             </h4>
             <div className="mt-2 space-y-2 text-gray-200">
-              <div className="h-4 bg-gray-700 rounded-full w-64" />
-              <div className="h-4 bg-gray-700 rounded-full w-64" />
-              <div className="h-4 bg-gray-700 rounded-full w-48" />
+              <div className="h-4 bg-gray-700 rounded-full w-[90%]" />
+              <div className="h-4 bg-gray-700 rounded-full w-[90%]" />
+              <div className="h-4 bg-gray-700 rounded-full w-[70%]" />
             </div>
           </div>
         </div>
