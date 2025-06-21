@@ -11,7 +11,7 @@ export default async function middleware(req) {
 
   if (protectedRoutes.includes(nextUrl.pathname) && !session) {
     console.log("User not authenticated, redirecting...");
-    return NextResponse.redirect(new URL("/api/auth/signin", nextUrl));
+    return NextResponse.redirect(new URL("/signin", nextUrl));
   }
 
   return NextResponse.next();
