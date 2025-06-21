@@ -32,7 +32,7 @@ export default function SignIn() {
       <header className="px-4 py-5">
         <div className="max-w-md mx-auto flex justify-between items-center">
           <a
-            href="/landing"
+            href="/"
             className="flex items-center text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
           >
             <FiArrowLeft className="mr-2" />
