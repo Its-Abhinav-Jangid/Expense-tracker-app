@@ -1,9 +1,9 @@
 import React from "react";
-import { Header } from "../components/Header";
-import { ExpenseChartSkeleton } from "../components/ExpenseChartSkeleton";
-import BalanceSheetSkeleton from "../components/BalanceSheetSkeleton";
-import ExpenseSummarySkeleton from "../components/ExpenseSummarySkeleton";
-import TransactionsListSkeleton from "../components/TransactionsListSkeleton";
+import { Header } from "@/app/components/Header";
+import { ExpenseChartSkeleton } from "@/app/components/ExpenseChartSkeleton";
+import BalanceSheetSkeleton from "@/app/components/BalanceSheetSkeleton";
+import ExpenseSummarySkeleton from "@/app/components/ExpenseSummarySkeleton";
+import TransactionsListSkeleton from "@/app/components/TransactionsListSkeleton";
 
 function loading() {
   return (

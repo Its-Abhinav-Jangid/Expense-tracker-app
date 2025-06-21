@@ -13,17 +13,19 @@ function NavBar() {
   return (
     <nav className={styles.navBar}>
       <Link
-        href={"/"}
-        className={`${styles.navItem} ${pathname === "/" ? styles.active : ""}`}
+        href={"/app"}
+        className={`${styles.navItem} ${
+          pathname === "/app" ? styles.active : ""
+        }`}
       >
         <FaHome className={styles.navIcon} />
         <span className={styles.navText}>Home</span>
       </Link>
 
       <Link
-        href={"/stats"}
+        href={"/app/stats"}
         className={`${styles.navItem} ${
-          pathname === "/stats" ? styles.active : ""
+          pathname === "/app/stats" ? styles.active : ""
         }`}
       >
         <FaChartLine className={styles.navIcon} />
@@ -36,18 +38,18 @@ function NavBar() {
         </div>
       </div>
       <Link
-        href={"/history"}
+        href={"/app/history"}
         className={`${styles.navItem} ${
-          pathname === "/history" ? styles.active : ""
+          pathname === "/app/history" ? styles.active : ""
         }`}
       >
         <FaHistory className={styles.navIcon} />
         <span className={styles.navText}>History</span>
       </Link>
       <Link
-        href={"/more"}
+        href={"/app/more"}
         className={`${styles.navItem} ${
-          pathname === "/more" ? styles.active : ""
+          pathname === "/app/more" ? styles.active : ""
         }`}
       >
         <FaEllipsisV className={styles.navIcon} />

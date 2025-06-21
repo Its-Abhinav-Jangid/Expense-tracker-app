@@ -1,7 +1,7 @@
 "use server";
 
 import axios from "axios";
-import { getCookie } from "../lib/getCookie";
+import { getCookie } from "../../../lib/getCookie";
 
 export default async function fetchData({ endDate = new Date(), limit = 500 }) {
   const sessionCookie = await getCookie(process.env.AUTH_COOKIE_NAME);

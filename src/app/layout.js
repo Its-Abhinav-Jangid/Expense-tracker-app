@@ -11,17 +11,12 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html style={{ scrollBehavior: "smooth" }} lang="en">
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="apple-mobile-web-app-title" content="Spenlys" />
       </head>
-      <body className="min-h-screen text-white bg-gray-900 pb-[100px]">
-        <ClientWrapper>
-          <SessionProvider>{children}</SessionProvider>
-          <NavBar />
-        </ClientWrapper>
-      </body>
+      <body className="min-h-screen text-white bg-gray-900 ">{children}</body>
     </html>
   );
 }

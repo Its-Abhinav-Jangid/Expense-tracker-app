@@ -12,13 +12,13 @@ import {
 import dynamic from "next/dynamic";
 
 const FeedbackModal = dynamic(() => import("@/app/components/FeedbackModal"));
-const LogoutModal = dynamic(() => import("../components/LogoutModal"));
+const LogoutModal = dynamic(() => import("@/app/components/LogoutModal"));
 import { useSession } from "next-auth/react";
 import { useUserDataStore } from "@/stores/useUserDataStore";
-import { currencyMap } from "../lib/constants/currencies";
+import { currencyMap } from "@/app/lib/constants/currencies";
 import ReactCountryFlag from "react-country-flag";
 import useLoadingStore from "@/stores/useIsLoadingStore";
-import CurrencyModal from "../components/CurrencyModal";
+import CurrencyModal from "@/app/components/CurrencyModal";
 
 const MoreTab = () => {
   const { data: session, status } = useSession();

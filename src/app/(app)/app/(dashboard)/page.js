@@ -1,27 +1,30 @@
 "use client";
 import dynamic from "next/dynamic";
-import { Header } from "../components/Header";
-const ExpensesList = dynamic(() => import("../components/ExpensesList"), {
+import { Header } from "@/app/components/Header";
+const ExpensesList = dynamic(() => import("@/app/components/ExpensesList"), {
   loading: () => <TransactionsListSkeleton />,
 });
 
-const ExpenseChart = dynamic(() => import("../components/ExpenseChart"), {
+const ExpenseChart = dynamic(() => import("@/app/components/ExpenseChart"), {
   loading: () => <ExpenseChartSkeleton />,
 });
-const ExpenseSummary = dynamic(() => import("../components/ExpenseSummary"), {
-  loading: () => <ExpenseSummarySkeleton />,
-});
+const ExpenseSummary = dynamic(
+  () => import("@/app/components/ExpenseSummary"),
+  {
+    loading: () => <ExpenseSummarySkeleton />,
+  }
+);
 
-const AiChatButton = dynamic(() => import("../components/AiChatButton"), {});
-const BalanceSheet = dynamic(() => import("../components/BalanceSheet"), {
+const AiChatButton = dynamic(() => import("@/app/components/AiChatButton"), {});
+const BalanceSheet = dynamic(() => import("@/app/components/BalanceSheet"), {
   loading: () => <BalanceSheetSkeleton />,
 });
-import "../globals.css";
+import "@/app/globals.css";
 import { useUserDataStore } from "@/stores/useUserDataStore";
-import { ExpenseChartSkeleton } from "../components/ExpenseChartSkeleton";
-import BalanceSheetSkeleton from "../components/BalanceSheetSkeleton";
-import TransactionsListSkeleton from "../components/TransactionsListSkeleton";
-import ExpenseSummarySkeleton from "../components/ExpenseSummarySkeleton";
+import { ExpenseChartSkeleton } from "@/app/components/ExpenseChartSkeleton";
+import BalanceSheetSkeleton from "@/app/components/BalanceSheetSkeleton";
+import TransactionsListSkeleton from "@/app/components/TransactionsListSkeleton";
+import ExpenseSummarySkeleton from "@/app/components/ExpenseSummarySkeleton";
 
 export default function Page() {
   const expenses = useUserDataStore((state) => state.expenses);

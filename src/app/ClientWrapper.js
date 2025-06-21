@@ -23,7 +23,7 @@ export default function ClientWrapper({ children }) {
   }, [setInitialData, setIsLoading]);
 
   return !isLoading && !user.currencyCode ? (
-    <CurrencyModal onClose={() => router.push("/")} canDismiss={false} />
+    <CurrencyModal onClose={() => router.push("/app")} canDismiss={false} />
   ) : (
     children
   );

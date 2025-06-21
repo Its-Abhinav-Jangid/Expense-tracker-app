@@ -7,7 +7,7 @@ export default async function middleware(req) {
   const session = await auth();
 
   // List of protected routes
-  const protectedRoutes = ["/"];
+  const protectedRoutes = ["/app", "/app/stats", "/app/history", "/app/more"];
 
   if (protectedRoutes.includes(nextUrl.pathname) && !session) {
     console.log("User not authenticated, redirecting...");

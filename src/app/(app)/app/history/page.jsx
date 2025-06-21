@@ -7,15 +7,15 @@ import {
   HiOutlineTrendingUp,
   HiOutlineTrendingDown,
 } from "react-icons/hi";
-import getTransactions from "../lib/getTransactions";
+import getTransactions from "@/app/lib/getTransactions";
 import { useUserDataStore } from "@/stores/useUserDataStore";
-import IncomeItem from "../components/IncomeItem";
-import { ExpenseItem } from "../components/ExpenseItem";
+import IncomeItem from "@/app/components/IncomeItem";
+import { ExpenseItem } from "@/app/components/ExpenseItem";
 import fetchData from "./fetchData";
 import { DotPulse } from "ldrs/react";
 import "ldrs/react/DotPulse.css";
 import useLoadingStore from "@/stores/useIsLoadingStore";
-import TransactionsListSkeleton from "../components/TransactionsListSkeleton";
+import TransactionsListSkeleton from "@/app/components/TransactionsListSkeleton";
 export default function page() {
   const isLoading = useLoadingStore((s) => s.isLoading);
   const expenses = useUserDataStore((state) => state.expenses);

@@ -4,7 +4,7 @@ import { HiOutlineFilter, HiOutlineChevronDown } from "react-icons/hi";
 
 import "ldrs/react/DotPulse.css";
 
-import TransactionsListSkeleton from "../components/TransactionsListSkeleton";
+import TransactionsListSkeleton from "@/app/components/TransactionsListSkeleton";
 export default function page() {
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 pb-20">

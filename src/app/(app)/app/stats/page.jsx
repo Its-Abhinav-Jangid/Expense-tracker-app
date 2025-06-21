@@ -2,25 +2,25 @@
 import dynamic from "next/dynamic";
 import React, { useMemo } from "react";
 import { useUserDataStore } from "@/stores/useUserDataStore";
-const BalanceSheet = dynamic(() => import("../components/BalanceSheet"), {
+const BalanceSheet = dynamic(() => import("@/app/components/BalanceSheet"), {
   loading: () => <BalanceSheetSkeleton />,
 });
 const MonthlyTrendChart = dynamic(
-  () => import("../components/MonthlyTrendChart"),
+  () => import("@/app/components/MonthlyTrendChart"),
   { loading: () => <MonthlyTrendChartSkeleton /> }
 );
-const SmartAITip = dynamic(() => import("../components/SmartAITip"), {
+const SmartAITip = dynamic(() => import("@/app/components/SmartAITip"), {
   loading: () => <SmartAITipSkeleton />,
 });
 const ExpenseCategoryChart = dynamic(
-  () => import("../components/ExpenseCategoryChart"),
+  () => import("@/app/components/ExpenseCategoryChart"),
   { loading: () => <ExpenseCategoryChartSkeleton /> }
 );
-import filterByCategories from "../lib/filterByCategories";
-import SmartAITipSkeleton from "../components/SmartAITipSkeleton";
-import BalanceSheetSkeleton from "../components/BalanceSheetSkeleton";
-import { MonthlyTrendChartSkeleton } from "../components/MonthlyTrendChartSkeleton";
-import { ExpenseCategoryChartSkeleton } from "../components/ExpenseCategoryChartSkeleton";
+import filterByCategories from "@/app/lib/filterByCategories";
+import SmartAITipSkeleton from "@/app/components/SmartAITipSkeleton";
+import BalanceSheetSkeleton from "@/app/components/BalanceSheetSkeleton";
+import { MonthlyTrendChartSkeleton } from "@/app/components/MonthlyTrendChartSkeleton";
+import { ExpenseCategoryChartSkeleton } from "@/app/components/ExpenseCategoryChartSkeleton";
 
 function Stats() {
   const expenses = useUserDataStore((state) => state.expenses);

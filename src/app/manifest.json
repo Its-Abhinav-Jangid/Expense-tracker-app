@@ -2,7 +2,9 @@
   "name": "Spenlys",
   "short_name": "Spenlys",
   "scope": "/",
-  "start_url": "/",
+  "start_url": "/app",
+  "lang": "en",
+  "description": "Track your income, expenses, and savings with smart insights. Spenlys makes managing your money effortless.",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",

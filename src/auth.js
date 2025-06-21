@@ -26,5 +26,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
   }, // Close the callbacks object here, and then spread authConfig
+  pages: {
+    signIn: "/signin",
+  },
   ...authConfig,
 });

@@ -1,17 +1,11 @@
 "use client";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import {
-  FaBug,
-  FaComments,
-  FaEnvelope,
-  FaTimes,
-  FaSpinner,
-} from "react-icons/fa";
+import { FaComments, FaEnvelope, FaTimes, FaSpinner } from "react-icons/fa";
 import FeedbackSuccessToast from "./FeedbackSuccessToast";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 
-const FeedbackModal = ({ onClose, type, email = "" }) => {
+const ContactUsModal = ({ onClose, email = "" }) => {
   const [formData, setFormData] = useState({
     email: email || "",
     message: "",
@@ -40,7 +34,7 @@ const FeedbackModal = ({ onClose, type, email = "" }) => {
 
     try {
       await axios.post("/api/feedback", {
-        type: type,
+        type: "Message",
         email: formData.email,
         message: formData.message,
       });
@@ -53,10 +47,10 @@ const FeedbackModal = ({ onClose, type, email = "" }) => {
         setIsToastVisible(false);
       }, 5000);
     } catch (error) {
-      console.error("Error submitting feedback: ", error);
+      console.error("Error sending message: ", error);
       setError(
         error.response?.data?.message ||
-          "There was an error submitting your feedback. Please try again later."
+          "There was an error sending message. Please try again later."
       );
     } finally {
       setIsSubmitting(false);
@@ -81,15 +75,7 @@ const FeedbackModal = ({ onClose, type, email = "" }) => {
           <div className="bg-gray-800 rounded-xl max-w-md w-full p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold flex items-center">
-                {type === "bug" ? (
-                  <>
-                    <FaBug className="mr-2 text-red-400" /> Report Bug
-                  </>
-                ) : (
-                  <>
-                    <FaComments className="mr-2 text-green-400" /> Send Feedback
-                  </>
-                )}
+                <FaComments className="mr-2 text-green-400" /> Send Message
               </h2>
               <button
                 onClick={closeModal}
@@ -110,9 +96,7 @@ const FeedbackModal = ({ onClose, type, email = "" }) => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="message" className="block text-gray-400 mb-2">
-                  {type === "bug"
-                    ? "Describe the bug"
-                    : "Your feedback or feature request"}
+                  Send your message
                 </label>
                 <textarea
                   name="message"
@@ -121,11 +105,7 @@ const FeedbackModal = ({ onClose, type, email = "" }) => {
                   rows={4}
                   value={formData.message}
                   onChange={handleChange}
-                  placeholder={
-                    type === "bug"
-                      ? "Please describe what happened..."
-                      : "Share your thoughts or feature ideas..."
-                  }
+                  placeholder="“Got ideas or found a bug? We’re in early access and would love your feedback!"
                   required
                   disabled={isSubmitting}
                 />
@@ -161,7 +141,7 @@ const FeedbackModal = ({ onClose, type, email = "" }) => {
                 ) : (
                   <>
                     <FaEnvelope className="mr-2" />
-                    Submit {type === "bug" ? "Bug Report" : "Feedback"}
+                    Submit
                   </>
                 )}
               </button>
@@ -170,9 +150,7 @@ const FeedbackModal = ({ onClose, type, email = "" }) => {
         </div>
       ) : (
         <FeedbackSuccessToast
-          message={`Your ${
-            type === "bug" ? "bug report" : "feedback"
-          } has been submitted successfully!`}
+          message={`Your message has been sent successfully!`}
           onDismiss={() => {
             closeModal();
           }}
@@ -182,4 +160,4 @@ const FeedbackModal = ({ onClose, type, email = "" }) => {
   );
 };
 
-export default FeedbackModal;
+export default ContactUsModal;
