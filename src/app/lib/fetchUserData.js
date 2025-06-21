@@ -36,13 +36,13 @@ export default async function fetchUserData() {
       axios.get(`${baseURL}/api/income`, headers),
       axios.get(`${baseURL}/api/user/currency`, headers),
     ]);
-  const [prev30DaysExpensesSummary] = summaryRes.data;
-  prev30DaysExpensesSummary.dailyExpenseData.pop();
+  const [expensesSummary] = summaryRes.data;
+  expensesSummary.dailyExpenseData.pop();
 
   return {
     expenses: expensesRes.data,
     income: incomeRes.data,
-    prev30DaysExpensesSummary,
+    expensesSummary,
     user: {
       currencyCode: currencyCodeRes.data.currencyCode,
     },

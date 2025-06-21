@@ -22,7 +22,7 @@
   "display": "standalone",
   "screenshots": [
     {
-      "src": "/screenshots/dashboard.png",
+      "src": "/screenshots/Dashboard.png",
       "sizes": "412x883",
       "type": "image/png"
     },

@@ -102,7 +102,7 @@ export const useUserDataStore = create((set, get) => ({
       ...initialData.expenses,
     ]);
     const updatedIncome = sortData([...current.income, ...initialData.income]);
-    let updatedSummary = initialData.prev30DaysExpensesSummary;
+    let updatedSummary = initialData.expensesSummary;
     if (current.expenses.length > 0) {
       updatedSummary = calculateExpensesSummary(updatedExpenses);
     }
@@ -205,9 +205,23 @@ export const useUserDataStore = create((set, get) => ({
       highest: newHighest,
       total: current.expensesSummary.total - prevAmount + newAmount,
       dailyExpenseData: current.expensesSummary.dailyExpenseData.map((d) => {
-        const isToday = d.day.split("T")[0] === prevData.date.split("T")[0];
-        if (isToday) {
-          return { ...d, total: d.total - prevAmount + newAmount };
+        if (
+          prevData.date.split("T")[0] ===
+          new Date(date).toISOString().split("T")[0]
+        ) {
+          const isToday = d.day.split("T")[0] === prevData.date.split("T")[0];
+          if (isToday) {
+            return { ...d, total: d.total - prevAmount + newAmount };
+          }
+        } else {
+          const prevDate = prevData.date.split("T")[0];
+          const newDate = new Date(date).toISOString().split("T")[0];
+          if (d.day.split("T")[0] === prevDate) {
+            return { ...d, total: d.total - prevAmount };
+          }
+          if (d.day.split("T")[0] === newDate) {
+            return { ...d, total: d.total + newAmount };
+          }
         }
         return d;
       }),
